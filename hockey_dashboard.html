@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bay State Hockey League - Youth Hockey Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .logo-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ============================================================================
+    // YOUTH HOCKEY DASHBOARD - Interactive Prototype
+    // ============================================================================
+    // API Base: http://localhost:8000/api/v1
+    // Season IDs: 10776 (Bay State Hockey League), 10477 (Eastern Hockey Federation)
+    // ============================================================================
+
+    // Logo mapping - maps team names to logo files in /logos/ directory
+    const LOGO_MAP = {
+      'WHK': 'WHK.svg',
+      'WHK Hawks': 'WHK.svg',
+      'Hingham': 'hingham.svg',
+      'Hanover': 'hanover.svg',
+      'Marshfield': 'marshfield.svg',
+      'Scituate': 'scituate.svg',
+      'Norwell': 'norwell.svg',
+      'Duxbury': 'duxbury.svg',
+      'Plymouth': 'plymouth.svg',
+      'Braintree': 'braintree.svg',
+      'Weymouth': 'weymouth.svg',
+      'Milton': 'milton.svg',
+      'Pembroke': 'pembroke.svg',
+      'Rockland': 'rockland.svg',
+      'Silver Lake': 'silverlake.svg',
+      'Cohasset Hull': 'cohasset_hull.svg',
+      'Canton': 'canton.svg',
+      'Bay State Breakers': 'bay_state_breakers.svg',
+      'South Shore Eagles': 'south_shore_eagles.svg',
+      'South Shore Seahawks': 'south_shore_seahawks.svg',
+      'Beantown Bullies': 'beantown_bullies.svg',
+      'Cape Cod Gulls': 'cape_cod_gulls.svg',
+      'Cape Cod Waves': 'capecodwaves.svg',
+      'Tri County': 'tricounty.svg',
+      'Barnstable': 'barnstable.svg',
+      'Sandwich': 'sandwich.svg',
+      'Bourne': 'bourne.svg',
+      'North Shore Shamrocks': 'Northshoreshamrocks.svg',
+      'Northstars': 'Northstars.svg',
+      'Minuteman': 'Minuteman.svg',
+      'Abington': 'Abington_youht_hockey.svg',
+      'KP Walpole': 'kp_walpole.svg',
+      'Walpole': 'walpole.svg',
+      'SC Panthers': 'sc_panthers.svg',
+      'Spartans': 'Spartans.svg',
+      'Vikings': 'vikings.svg',
+      'Noreasters': 'noreasters.svg',
+    };
+
+    // Sample data structure matching API responses
+    const MOCK_DATA = {
+      season: {
+        season_id: "10776",
+        title: "Bay State Hockey League 2024-25",
+        sport: "hockey",
+        association: "USAH - Massachusetts District",
+        divisions_count: 8,
+        teams_count: 64,
+        games_count: 320
+      },
+      divisions: [
+        { division_id: 101, division_name: "U10C South", teams_count: 8, games_count: 40 },
+        { division_id: 102, division_name: "U10B South", teams_count: 8, games_count: 40 },
+        { division_id: 103, division_name: "U12C South", teams_count: 8, games_count: 40 },
+        { division_id: 104, division_name: "U12B South", teams_count: 8, games_count: 40 },
+        { division_id: 105, division_name: "U14B South", teams_count: 8, games_count: 40 },
+        { division_id: 106, division_name: "U14C South", teams_count: 8, games_count: 40 },
+      ],
+      standings: {
+        101: [
+          { rank: 1, team_id: 1001, team_name: "WHK Hawks", division: "U10C South", gp: 12, w: 10, l: 1, t: 1, gf: 48, ga: 18, pts: 21 },
+          { rank: 2, team_id: 1002, team_name: "Hingham", division: "U10C South", gp: 12, w: 9, l: 2, t: 1, gf: 42, ga: 22, pts: 19 },
+          { rank: 3, team_id: 1003, team_name: "Marshfield", division: "U10C South", gp: 12, w: 8, l: 3, t: 1, gf: 38, ga: 24, pts: 17 },
+          { rank: 4, team_id: 1004, team_name: "Hanover", division: "U10C South", gp: 12, w: 7, l: 4, t: 1, gf: 35, ga: 28, pts: 15 },
+          { rank: 5, team_id: 1005, team_name: "Scituate", division: "U10C South", gp: 12, w: 6, l: 5, t: 1, gf: 32, ga: 30, pts: 13 },
+          { rank: 6, team_id: 1006, team_name: "Norwell", division: "U10C South", gp: 12, w: 4, l: 6, t: 2, gf: 28, ga: 35, pts: 10 },
+          { rank: 7, team_id: 1007, team_name: "Duxbury", division: "U10C South", gp: 12, w: 2, l: 8, t: 2, gf: 20, ga: 42, pts: 6 },
+          { rank: 8, team_id: 1008, team_name: "Plymouth", division: "U10C South", gp: 12, w: 1, l: 10, t: 1, gf: 15, ga: 52, pts: 3 },
+        ],
+        102: [
+          { rank: 1, team_id: 2001, team_name: "South Shore Eagles", division: "U10B South", gp: 12, w: 11, l: 1, t: 0, gf: 55, ga: 15, pts: 22 },
+          { rank: 2, team_id: 2002, team_name: "Braintree", division: "U10B South", gp: 12, w: 9, l: 2, t: 1, gf: 45, ga: 20, pts: 19 },
+          { rank: 3, team_id: 2003, team_name: "Canton", division: "U10B South", gp: 12, w: 8, l: 3, t: 1, gf: 40, ga: 25, pts: 17 },
+          { rank: 4, team_id: 2004, team_name: "Weymouth", division: "U10B South", gp: 12, w: 6, l: 5, t: 1, gf: 35, ga: 30, pts: 13 },
+          { rank: 5, team_id: 2005, team_name: "Milton", division: "U10B South", gp: 12, w: 5, l: 6, t: 1, gf: 30, ga: 32, pts: 11 },
+          { rank: 6, team_id: 2006, team_name: "Rockland", division: "U10B South", gp: 12, w: 4, l: 7, t: 1, gf: 28, ga: 38, pts: 9 },
+          { rank: 7, team_id: 2007, team_name: "Cohasset Hull", division: "U10B South", gp: 12, w: 2, l: 9, t: 1, gf: 18, ga: 45, pts: 5 },
+          { rank: 8, team_id: 2008, team_name: "Pembroke", division: "U10B South", gp: 12, w: 1, l: 10, t: 1, gf: 12, ga: 55, pts: 3 },
+        ],
+        103: [
+          { rank: 1, team_id: 3001, team_name: "Bay State Breakers", division: "U12C South", gp: 14, w: 12, l: 1, t: 1, gf: 62, ga: 18, pts: 25 },
+          { rank: 2, team_id: 3002, team_name: "Tri County", division: "U12C South", gp: 14, w: 10, l: 3, t: 1, gf: 52, ga: 25, pts: 21 },
+          { rank: 3, team_id: 3003, team_name: "Cape Cod Waves", division: "U12C South", gp: 14, w: 9, l: 4, t: 1, gf: 48, ga: 28, pts: 19 },
+          { rank: 4, team_id: 3004, team_name: "Barnstable", division: "U12C South", gp: 14, w: 7, l: 5, t: 2, gf: 40, ga: 32, pts: 16 },
+          { rank: 5, team_id: 3005, team_name: "Sandwich", division: "U12C South", gp: 14, w: 6, l: 6, t: 2, gf: 35, ga: 38, pts: 14 },
+          { rank: 6, team_id: 3006, team_name: "Bourne", division: "U12C South", gp: 14, w: 4, l: 8, t: 2, gf: 28, ga: 45, pts: 10 },
+          { rank: 7, team_id: 3007, team_name: "Silver Lake", division: "U12C South", gp: 14, w: 2, l: 10, t: 2, gf: 20, ga: 52, pts: 6 },
+          { rank: 8, team_id: 3008, team_name: "Abington", division: "U12C South", gp: 14, w: 1, l: 12, t: 1, gf: 15, ga: 60, pts: 3 },
+        ],
+        104: [
+          { rank: 1, team_id: 4001, team_name: "North Shore Shamrocks", division: "U12B South", gp: 14, w: 11, l: 2, t: 1, gf: 58, ga: 22, pts: 23 },
+          { rank: 2, team_id: 4002, team_name: "Northstars", division: "U12B South", gp: 14, w: 10, l: 3, t: 1, gf: 52, ga: 28, pts: 21 },
+          { rank: 3, team_id: 4003, team_name: "Minuteman", division: "U12B South", gp: 14, w: 8, l: 4, t: 2, gf: 45, ga: 32, pts: 18 },
+          { rank: 4, team_id: 4004, team_name: "KP Walpole", division: "U12B South", gp: 14, w: 7, l: 5, t: 2, gf: 40, ga: 35, pts: 16 },
+          { rank: 5, team_id: 4005, team_name: "Walpole", division: "U12B South", gp: 14, w: 5, l: 7, t: 2, gf: 32, ga: 40, pts: 12 },
+          { rank: 6, team_id: 4006, team_name: "SC Panthers", division: "U12B South", gp: 14, w: 4, l: 8, t: 2, gf: 28, ga: 45, pts: 10 },
+          { rank: 7, team_id: 4007, team_name: "Spartans", division: "U12B South", gp: 14, w: 3, l: 9, t: 2, gf: 25, ga: 50, pts: 8 },
+          { rank: 8, team_id: 4008, team_name: "Vikings", division: "U12B South", gp: 14, w: 2, l: 11, t: 1, gf: 18, ga: 55, pts: 5 },
+        ],
+        105: [
+          { rank: 1, team_id: 5001, team_name: "Beantown Bullies", division: "U14B South", gp: 16, w: 13, l: 2, t: 1, gf: 72, ga: 28, pts: 27 },
+          { rank: 2, team_id: 5002, team_name: "Cape Cod Gulls", division: "U14B South", gp: 16, w: 11, l: 4, t: 1, gf: 60, ga: 35, pts: 23 },
+          { rank: 3, team_id: 5003, team_name: "South Shore Seahawks", division: "U14B South", gp: 16, w: 10, l: 5, t: 1, gf: 55, ga: 38, pts: 21 },
+          { rank: 4, team_id: 5004, team_name: "Noreasters", division: "U14B South", gp: 16, w: 8, l: 6, t: 2, gf: 48, ga: 42, pts: 18 },
+          { rank: 5, team_id: 5005, team_name: "Hanover", division: "U14B South", gp: 16, w: 6, l: 8, t: 2, gf: 40, ga: 48, pts: 14 },
+          { rank: 6, team_id: 5006, team_name: "Marshfield", division: "U14B South", gp: 16, w: 5, l: 9, t: 2, gf: 35, ga: 52, pts: 12 },
+          { rank: 7, team_id: 5007, team_name: "Scituate", division: "U14B South", gp: 16, w: 3, l: 11, t: 2, gf: 28, ga: 60, pts: 8 },
+          { rank: 8, team_id: 5008, team_name: "Norwell", division: "U14B South", gp: 16, w: 2, l: 13, t: 1, gf: 22, ga: 68, pts: 5 },
+        ],
+        106: [
+          { rank: 1, team_id: 6001, team_name: "Hingham", division: "U14C South", gp: 14, w: 12, l: 1, t: 1, gf: 65, ga: 20, pts: 25 },
+          { rank: 2, team_id: 6002, team_name: "Braintree", division: "U14C South", gp: 14, w: 10, l: 3, t: 1, gf: 55, ga: 28, pts: 21 },
+          { rank: 3, team_id: 6003, team_name: "Milton", division: "U14C South", gp: 14, w: 8, l: 4, t: 2, gf: 48, ga: 32, pts: 18 },
+          { rank: 4, team_id: 6004, team_name: "Weymouth", division: "U14C South", gp: 14, w: 7, l: 5, t: 2, gf: 42, ga: 38, pts: 16 },
+          { rank: 5, team_id: 6005, team_name: "Rockland", division: "U14C South", gp: 14, w: 5, l: 7, t: 2, gf: 35, ga: 42, pts: 12 },
+          { rank: 6, team_id: 6006, team_name: "Canton", division: "U14C South", gp: 14, w: 4, l: 8, t: 2, gf: 30, ga: 48, pts: 10 },
+          { rank: 7, team_id: 6007, team_name: "Cohasset Hull", division: "U14C South", gp: 14, w: 2, l: 10, t: 2, gf: 22, ga: 55, pts: 6 },
+          { rank: 8, team_id: 6008, team_name: "Plymouth", division: "U14C South", gp: 14, w: 1, l: 12, t: 1, gf: 18, ga: 62, pts: 3 },
+        ],
+      },
+      teams: {
+        1001: {
+          team_id: 1001,
+          team_name: "WHK Hawks",
+          division_id: 101,
+          division_name: "U10C South",
+          record: { gp: 12, w: 10, l: 1, t: 1, pts: 21, pts_pct: 0.875 },
+          scoring: { gf: 48, ga: 18, diff: 30, gpg: 4.0, gapg: 1.5 },
+          recent_form: { last_5: "W-W-W-L-W", streak: "W2" },
+          roster: [
+            { id: "p1", number: 9, name: "Brady Smith", position: "C", gp: 12, g: 15, a: 12, pts: 27, pim: 4 },
+            { id: "p2", number: 11, name: "Tyler Johnson", position: "LW", gp: 12, g: 10, a: 8, pts: 18, pim: 6 },
+            { id: "p3", number: 7, name: "Jake Wilson", position: "RW", gp: 12, g: 8, a: 10, pts: 18, pim: 2 },
+            { id: "p4", number: 4, name: "Ryan Murphy", position: "D", gp: 12, g: 3, a: 12, pts: 15, pim: 8 },
+            { id: "p5", number: 21, name: "Connor Brown", position: "D", gp: 12, g: 2, a: 10, pts: 12, pim: 4 },
+            { id: "p6", number: 14, name: "Matt Davis", position: "C", gp: 12, g: 5, a: 6, pts: 11, pim: 2 },
+            { id: "p7", number: 17, name: "Luke Anderson", position: "LW", gp: 10, g: 3, a: 5, pts: 8, pim: 0 },
+            { id: "p8", number: 22, name: "Sam Taylor", position: "RW", gp: 11, g: 2, a: 4, pts: 6, pim: 2 },
+            { id: "p9", number: 30, name: "Alex Garcia", position: "G", gp: 10, g: 0, a: 0, pts: 0, pim: 0, gaa: 1.5, sv: 0.925 },
+          ],
+          schedule: [
+            { id: "g1", date: "2025-01-18", time: "7:00 PM", opponent: "Hingham", home: true, score: "4-2", result: "W" },
+            { id: "g2", date: "2025-01-25", time: "8:00 PM", opponent: "Marshfield", home: false, score: "5-1", result: "W" },
+            { id: "g3", date: "2025-02-01", time: "6:00 PM", opponent: "Hanover", home: true, score: null, result: null },
+            { id: "g4", date: "2025-02-08", time: "7:30 PM", opponent: "Scituate", home: false, score: null, result: null },
+            { id: "g5", date: "2025-02-15", time: "5:00 PM", opponent: "Norwell", home: true, score: null, result: null },
+          ]
+        },
+        1002: {
+          team_id: 1002, team_name: "Hingham", division_id: 101, division_name: "U10C South",
+          record: { gp: 12, w: 9, l: 2, t: 1, pts: 19, pts_pct: 0.792 },
+          scoring: { gf: 42, ga: 22, diff: 20, gpg: 3.5, gapg: 1.83 },
+          recent_form: { last_5: "W-L-W-W-W", streak: "W3" },
+          roster: [
+            { id: "p10", number: 19, name: "Jack Miller", position: "C", gp: 12, g: 12, a: 10, pts: 22, pim: 2 },
+            { id: "p11", number: 8, name: "Ben Thompson", position: "LW", gp: 12, g: 9, a: 7, pts: 16, pim: 4 },
+            { id: "p12", number: 15, name: "Dylan White", position: "RW", gp: 12, g: 7, a: 8, pts: 15, pim: 2 },
+          ],
+          schedule: []
+        },
+        2001: {
+          team_id: 2001, team_name: "South Shore Eagles", division_id: 102, division_name: "U10B South",
+          record: { gp: 12, w: 11, l: 1, t: 0, pts: 22, pts_pct: 0.917 },
+          scoring: { gf: 55, ga: 15, diff: 40, gpg: 4.58, gapg: 1.25 },
+          recent_form: { last_5: "W-W-W-W-W", streak: "W8" },
+          roster: [
+            { id: "p20", number: 10, name: "Ethan Clark", position: "C", gp: 12, g: 18, a: 14, pts: 32, pim: 2 },
+            { id: "p21", number: 16, name: "Noah Harris", position: "LW", gp: 12, g: 12, a: 10, pts: 22, pim: 4 },
+          ],
+          schedule: []
+        },
+        3001: {
+          team_id: 3001, team_name: "Bay State Breakers", division_id: 103, division_name: "U12C South",
+          record: { gp: 14, w: 12, l: 1, t: 1, pts: 25, pts_pct: 0.893 },
+          scoring: { gf: 62, ga: 18, diff: 44, gpg: 4.43, gapg: 1.29 },
+          recent_form: { last_5: "W-W-T-W-W", streak: "W2" },
+          roster: [
+            { id: "p30", number: 12, name: "Aiden Roberts", position: "C", gp: 14, g: 20, a: 16, pts: 36, pim: 6 },
+          ],
+          schedule: []
+        },
+        5001: {
+          team_id: 5001, team_name: "Beantown Bullies", division_id: 105, division_name: "U14B South",
+          record: { gp: 16, w: 13, l: 2, t: 1, pts: 27, pts_pct: 0.844 },
+          scoring: { gf: 72, ga: 28, diff: 44, gpg: 4.5, gapg: 1.75 },
+          recent_form: { last_5: "W-W-L-W-W", streak: "W2" },
+          roster: [
+            { id: "p50", number: 91, name: "Mason Lee", position: "C", gp: 16, g: 24, a: 20, pts: 44, pim: 8 },
+          ],
+          schedule: []
+        },
+      }
+    };
+
+    // Team Logo Component with fallback
+    const TeamLogo = ({ teamName, size = 48, className = "" }) => {
+      const [hasError, setHasError] = useState(false);
+      const logoFile = LOGO_MAP[teamName] || LOGO_MAP[teamName?.split(' ')[0]];
+      const fallbackInitials = teamName?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '??';
+
+      // Team colors for fallback
+      const colors = {
+        'WHK': ['#1e3a5f', '#c4a84b'],
+        'Hingham': ['#800020', '#ffd700'],
+        'Hanover': ['#006400', '#ffffff'],
+        'Marshfield': ['#000080', '#ffd700'],
+        'default': ['#1e40af', '#3b82f6']
+      };
+
+      const [bg, accent] = colors[teamName?.split(' ')[0]] || colors.default;
+
+      if (!logoFile || hasError) {
+        return (
+          <div
+            className={`rounded-full flex items-center justify-center text-white font-bold shadow-md ${className}`}
+            style={{
+              width: size,
+              height: size,
+              fontSize: size * 0.35,
+              background: `linear-gradient(135deg, ${bg} 0%, ${accent} 100%)`
+            }}
+          >
+            {fallbackInitials}
+          </div>
+        );
+      }
+
+      return (
+        <div
+          className={`rounded-full bg-white flex items-center justify-center overflow-hidden shadow-md border-2 border-gray-100 ${className}`}
+          style={{ width: size, height: size }}
+        >
+          <img
+            src={`logos/${logoFile}`}
+            alt={teamName}
+            className="w-full h-full object-contain p-1"
+            onError={() => setHasError(true)}
+          />
+        </div>
+      );
+    };
+
+    // API Endpoint Badge
+    const APIBadge = ({ endpoint, method = "GET" }) => (
+      <div className="inline-flex items-center gap-1.5 bg-gray-900 text-gray-300 px-2 py-1 rounded text-xs font-mono">
+        <span className={`font-semibold ${method === 'GET' ? 'text-green-400' : 'text-blue-400'}`}>{method}</span>
+        <span className="text-gray-400">{endpoint}</span>
+      </div>
+    );
+
+    // Stats Card Component
+    const StatCard = ({ label, value, subtext, trend, color = "blue" }) => {
+      const colorClasses = {
+        blue: "from-blue-500 to-blue-600",
+        green: "from-green-500 to-green-600",
+        red: "from-red-500 to-red-600",
+        yellow: "from-yellow-500 to-yellow-600"
+      };
+
+      return (
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+          <div className={`h-1 bg-gradient-to-r ${colorClasses[color]}`}></div>
+          <div className="p-4 text-center">
+            <div className="text-sm text-gray-500 uppercase tracking-wide font-medium">{label}</div>
+            <div className="text-3xl font-bold text-gray-900 mt-1">{value}</div>
+            {subtext && <div className="text-sm text-gray-500 mt-1">{subtext}</div>}
+            {trend !== undefined && (
+              <div className={`text-sm mt-1 font-medium ${trend > 0 ? 'text-green-600' : trend < 0 ? 'text-red-600' : 'text-gray-500'}`}>
+                {trend > 0 ? '▲' : trend < 0 ? '▼' : '–'} {Math.abs(trend)}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    // Standings Table Row
+    const StandingsRow = ({ team, onTeamClick }) => {
+      const diff = team.gf - team.ga;
+      return (
+        <tr
+          className="hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-100 group"
+          onClick={() => onTeamClick(team.team_id)}
+        >
+          <td className="py-3 px-4 text-center">
+            <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full font-bold text-sm
+              ${team.rank === 1 ? 'bg-yellow-400 text-yellow-900' :
+                team.rank === 2 ? 'bg-gray-300 text-gray-700' :
+                team.rank === 3 ? 'bg-amber-600 text-amber-100' :
+                'bg-gray-100 text-gray-600'}`}>
+              {team.rank}
+            </span>
+          </td>
+          <td className="py-3 px-4">
+            <div className="flex items-center gap-3">
+              <TeamLogo teamName={team.team_name} size={40} />
+              <div>
+                <div className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">{team.team_name}</div>
+                <div className="text-xs text-gray-500">{team.division}</div>
+              </div>
+            </div>
+          </td>
+          <td className="py-3 px-4 text-center font-medium text-gray-700">{team.gp}</td>
+          <td className="py-3 px-4 text-center text-green-700 font-semibold">{team.w}</td>
+          <td className="py-3 px-4 text-center text-red-700 font-semibold">{team.l}</td>
+          <td className="py-3 px-4 text-center text-gray-600">{team.t}</td>
+          <td className="py-3 px-4 text-center text-gray-700">{team.gf}</td>
+          <td className="py-3 px-4 text-center text-gray-700">{team.ga}</td>
+          <td className="py-3 px-4 text-center font-semibold" style={{ color: diff > 0 ? '#059669' : diff < 0 ? '#dc2626' : '#6b7280' }}>
+            {diff > 0 ? '+' : ''}{diff}
+          </td>
+          <td className="py-3 px-4 text-center">
+            <span className="inline-flex items-center justify-center bg-blue-100 text-blue-800 font-bold rounded-full w-10 h-10">
+              {team.pts}
+            </span>
+          </td>
+        </tr>
+      );
+    };
+
+    // Division Card for Overview
+    const DivisionCard = ({ division, standings, onDivisionClick, onTeamClick }) => {
+      const topTeams = standings?.slice(0, 3) || [];
+
+      return (
+        <div
+          className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1"
+          onClick={() => onDivisionClick(division.division_id)}
+        >
+          <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-5 py-4">
+            <h3 className="text-white font-bold text-xl">{division.division_name}</h3>
+            <div className="text-blue-200 text-sm mt-1">{division.teams_count} Teams • {division.games_count} Games</div>
+          </div>
+
+          <div className="p-5">
+            {/* Top 3 Teams with Logos */}
+            <div className="flex items-center justify-center gap-4 mb-4 py-2">
+              {topTeams.map((team, idx) => (
+                <div
+                  key={team.team_id}
+                  className="relative group/logo"
+                  onClick={(e) => { e.stopPropagation(); onTeamClick(team.team_id); }}
+                >
+                  <TeamLogo
+                    teamName={team.team_name}
+                    size={idx === 0 ? 64 : 52}
+                    className={idx === 0 ? 'ring-4 ring-yellow-400 ring-offset-2' : ''}
+                  />
+                  <div className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-lg
+                    ${idx === 0 ? 'bg-yellow-400 text-yellow-900' : idx === 1 ? 'bg-gray-400 text-white' : 'bg-amber-700 text-white'}`}>
+                    {idx + 1}
+                  </div>
+                  <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/logo:opacity-100 transition-opacity whitespace-nowrap">
+                    {team.team_name}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Standings Preview */}
+            <div className="space-y-2 mt-6">
+              {topTeams.map((team, idx) => (
+                <div
+                  key={team.team_id}
+                  className="flex items-center justify-between text-sm hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors"
+                  onClick={(e) => { e.stopPropagation(); onTeamClick(team.team_id); }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold
+                      ${idx === 0 ? 'bg-yellow-100 text-yellow-700' : idx === 1 ? 'bg-gray-100 text-gray-600' : 'bg-amber-100 text-amber-700'}`}>
+                      {idx + 1}
+                    </span>
+                    <span className="font-medium text-gray-800">{team.team_name}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-500 text-xs">{team.w}-{team.l}-{team.t}</span>
+                    <span className="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">{team.pts} pts</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 text-center">
+              <span className="text-blue-600 text-sm font-medium hover:underline inline-flex items-center gap-1">
+                View Full Standings
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Team Detail View
+    const TeamDetailView = ({ teamId, onBack }) => {
+      const team = MOCK_DATA.teams[teamId];
+
+      // If team not in detailed data, create from standings
+      const findTeamInStandings = () => {
+        for (const standings of Object.values(MOCK_DATA.standings)) {
+          const found = standings.find(t => t.team_id === teamId);
+          if (found) return found;
+        }
+        return null;
+      };
+
+      const standingsTeam = findTeamInStandings();
+
+      if (!team && !standingsTeam) {
+        return (
+          <div className="p-8 text-center">
+            <p className="text-gray-500">Team details coming soon</p>
+            <button onClick={onBack} className="mt-4 text-blue-600 hover:underline">← Back</button>
+          </div>
+        );
+      }
+
+      const displayTeam = team || {
+        team_id: standingsTeam.team_id,
+        team_name: standingsTeam.team_name,
+        division_name: standingsTeam.division,
+        record: { gp: standingsTeam.gp, w: standingsTeam.w, l: standingsTeam.l, t: standingsTeam.t, pts: standingsTeam.pts, pts_pct: standingsTeam.pts / (standingsTeam.gp * 2) },
+        scoring: { gf: standingsTeam.gf, ga: standingsTeam.ga, diff: standingsTeam.gf - standingsTeam.ga, gpg: (standingsTeam.gf / standingsTeam.gp).toFixed(2), gapg: (standingsTeam.ga / standingsTeam.gp).toFixed(2) },
+        recent_form: { last_5: "N/A", streak: "N/A" },
+        roster: [],
+        schedule: []
+      };
+
+      return (
+        <div className="max-w-6xl mx-auto">
+          {/* Team Header */}
+          <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 rounded-2xl p-8 mb-6 shadow-xl">
+            <button onClick={onBack} className="text-blue-200 hover:text-white mb-6 flex items-center gap-2 transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Standings
+            </button>
+
+            <div className="flex items-center gap-8">
+              <TeamLogo teamName={displayTeam.team_name} size={120} className="border-4 border-white shadow-2xl" />
+              <div className="flex-1">
+                <h1 className="text-4xl font-bold text-white mb-2">{displayTeam.team_name}</h1>
+                <p className="text-blue-200 text-xl mb-4">{displayTeam.division_name}</p>
+                <div className="flex gap-4 flex-wrap">
+                  <span className="bg-white/20 backdrop-blur px-4 py-2 rounded-lg text-white">
+                    Record: <strong className="text-xl">{displayTeam.record.w}-{displayTeam.record.l}-{displayTeam.record.t}</strong>
+                  </span>
+                  <span className="bg-white/20 backdrop-blur px-4 py-2 rounded-lg text-white">
+                    Points: <strong className="text-xl">{displayTeam.record.pts}</strong>
+                  </span>
+                  {displayTeam.recent_form.streak !== "N/A" && (
+                    <span className="bg-green-500/30 backdrop-blur px-4 py-2 rounded-lg text-white">
+                      Streak: <strong className="text-xl">{displayTeam.recent_form.streak}</strong>
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-2 flex-wrap">
+              <APIBadge endpoint={`/api/v1/teams/${teamId}`} />
+              <APIBadge endpoint={`/api/v1/teams/${teamId}/stats`} />
+              <APIBadge endpoint={`/api/v1/teams/${teamId}/roster`} />
+              <APIBadge endpoint={`/api/v1/teams/${teamId}/schedule`} />
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <StatCard label="Goals For" value={displayTeam.scoring.gf} subtext={`${displayTeam.scoring.gpg} per game`} color="green" />
+            <StatCard label="Goals Against" value={displayTeam.scoring.ga} subtext={`${displayTeam.scoring.gapg} per game`} color="red" />
+            <StatCard label="Goal Diff" value={displayTeam.scoring.diff > 0 ? `+${displayTeam.scoring.diff}` : displayTeam.scoring.diff} trend={displayTeam.scoring.diff} color="blue" />
+            <StatCard label="Points %" value={`${(displayTeam.record.pts_pct * 100).toFixed(1)}%`} color="yellow" />
+          </div>
+
+          {/* Roster Section */}
+          {displayTeam.roster.length > 0 && (
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6 shadow-sm">
+              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-900">Roster & Stats</h2>
+                <APIBadge endpoint={`/api/v1/teams/${teamId}/roster`} />
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase">#</th>
+                      <th className="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase">Player</th>
+                      <th className="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase">Pos</th>
+                      <th className="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase">GP</th>
+                      <th className="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase">G</th>
+                      <th className="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase">A</th>
+                      <th className="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase">PTS</th>
+                      <th className="py-3 px-4 text-center text-xs font-semibold text-gray-500 uppercase">PIM</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {displayTeam.roster.map((player, idx) => (
+                      <tr key={player.id} className={`border-b border-gray-100 hover:bg-blue-50 transition-colors ${idx % 2 === 1 ? 'bg-gray-50' : ''}`}>
+                        <td className="py-3 px-4 font-bold text-blue-700">{player.number}</td>
+                        <td className="py-3 px-4 font-medium text-gray-900">{player.name}</td>
+                        <td className="py-3 px-4 text-center">
+                          <span className={`inline-block px-2 py-1 rounded text-xs font-medium
+                            ${player.position === 'G' ? 'bg-purple-100 text-purple-700' :
+                              player.position === 'D' ? 'bg-blue-100 text-blue-700' :
+                              'bg-green-100 text-green-700'}`}>
+                            {player.position}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-center text-gray-600">{player.gp}</td>
+                        <td className="py-3 px-4 text-center text-green-700 font-semibold">{player.g}</td>
+                        <td className="py-3 px-4 text-center text-blue-700 font-semibold">{player.a}</td>
+                        <td className="py-3 px-4 text-center font-bold text-gray-900">{player.pts}</td>
+                        <td className="py-3 px-4 text-center text-gray-500">{player.pim}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Schedule Section */}
+          {displayTeam.schedule.length > 0 && (
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-900">Schedule</h2>
+                <APIBadge endpoint={`/api/v1/teams/${teamId}/schedule`} />
+              </div>
+
+              <div className="divide-y divide-gray-100">
+                {displayTeam.schedule.map((game) => (
+                  <div key={game.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center gap-6">
+                      <div className="text-center" style={{ minWidth: 90 }}>
+                        <div className="text-sm font-semibold text-gray-900">{game.date}</div>
+                        <div className="text-xs text-gray-500">{game.time}</div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${game.home ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                          {game.home ? 'HOME' : 'AWAY'}
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-gray-400 font-medium">vs</span>
+                          <TeamLogo teamName={game.opponent} size={36} />
+                          <span className="font-semibold text-gray-900">{game.opponent}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {game.result ? (
+                      <div className={`text-xl font-bold px-4 py-2 rounded-lg ${
+                        game.result === 'W' ? 'bg-green-100 text-green-700' :
+                        game.result === 'L' ? 'bg-red-100 text-red-700' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {game.result} {game.score}
+                      </div>
+                    ) : (
+                      <div className="text-gray-400 text-sm font-medium px-4 py-2 bg-gray-50 rounded-lg">
+                        Upcoming
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Empty state for teams without detailed data */}
+          {displayTeam.roster.length === 0 && displayTeam.schedule.length === 0 && (
+            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+              <div className="text-gray-400 text-6xl mb-4">📊</div>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">Full Team Details Coming Soon</h3>
+              <p className="text-gray-500">Roster and schedule data will be available when the API is connected.</p>
+              <div className="mt-4">
+                <APIBadge endpoint={`/api/v1/teams/${teamId}/roster`} />
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Division Standings View
+    const DivisionStandingsView = ({ divisionId, onBack, onTeamClick }) => {
+      const division = MOCK_DATA.divisions.find(d => d.division_id === divisionId);
+      const standings = MOCK_DATA.standings[divisionId] || [];
+
+      return (
+        <div className="max-w-5xl mx-auto">
+          <button onClick={onBack} className="text-blue-600 hover:text-blue-800 mb-6 flex items-center gap-2 font-medium transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to All Divisions
+          </button>
+
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+            <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-5 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">{division?.division_name} Standings</h2>
+                <p className="text-blue-200 mt-1">{standings.length} Teams • Current Season</p>
+              </div>
+              <APIBadge endpoint={`/api/v1/divisions/${divisionId}/standings`} />
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-100 border-b border-gray-200">
+                  <tr>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase w-16">Rank</th>
+                    <th className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase">Team</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">GP</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">W</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">L</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">T</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">GF</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">GA</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">Diff</th>
+                    <th className="py-4 px-4 text-center text-xs font-semibold text-gray-500 uppercase">PTS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {standings.map((team) => (
+                    <StandingsRow key={team.team_id} team={team} onTeamClick={onTeamClick} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // League Leaders Panel
+    const LeagueLeaders = ({ onTeamClick }) => {
+      const topTeams = [
+        { name: "Beantown Bullies", pts: 27, division: "U14B", gp: 16 },
+        { name: "Bay State Breakers", pts: 25, division: "U12C", gp: 14 },
+        { name: "Hingham", pts: 25, division: "U14C", gp: 14 },
+        { name: "North Shore Shamrocks", pts: 23, division: "U12B", gp: 14 },
+        { name: "South Shore Eagles", pts: 22, division: "U10B", gp: 12 },
+      ];
+
+      const bestOffense = [
+        { name: "South Shore Eagles", gpg: 4.58, gf: 55, gp: 12 },
+        { name: "Beantown Bullies", gpg: 4.50, gf: 72, gp: 16 },
+        { name: "Hingham", gpg: 4.64, gf: 65, gp: 14 },
+        { name: "Bay State Breakers", gpg: 4.43, gf: 62, gp: 14 },
+        { name: "WHK Hawks", gpg: 4.00, gf: 48, gp: 12 },
+      ];
+
+      const bestDefense = [
+        { name: "South Shore Eagles", gapg: 1.25, ga: 15, gp: 12 },
+        { name: "Bay State Breakers", gapg: 1.29, ga: 18, gp: 14 },
+        { name: "Hingham", gapg: 1.43, ga: 20, gp: 14 },
+        { name: "WHK Hawks", gapg: 1.50, ga: 18, gp: 12 },
+        { name: "North Shore Shamrocks", gapg: 1.57, ga: 22, gp: 14 },
+      ];
+
+      return (
+        <div className="mt-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">League Leaders</h2>
+            <APIBadge endpoint="/api/v1/seasons/10776/leaders" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Top Teams by Points */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="bg-gradient-to-r from-yellow-500 to-amber-500 px-5 py-4">
+                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                  <span className="text-2xl">🏆</span> Top Teams by Points
+                </h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {topTeams.map((team, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                      ${idx === 0 ? 'bg-yellow-400 text-yellow-900' :
+                        idx === 1 ? 'bg-gray-300 text-gray-700' :
+                        idx === 2 ? 'bg-amber-600 text-white' :
+                        'bg-gray-100 text-gray-600'}`}>
+                      {idx + 1}
+                    </div>
+                    <TeamLogo teamName={team.name} size={40} />
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900 text-sm">{team.name}</div>
+                      <div className="text-xs text-gray-500">{team.division} • {team.gp} GP</div>
+                    </div>
+                    <div className="font-bold text-blue-700 text-lg">{team.pts}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Best Offense */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-500 px-5 py-4">
+                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                  <span className="text-2xl">🎯</span> Best Offense (G/GP)
+                </h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {bestOffense.map((team, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                      ${idx === 0 ? 'bg-green-500 text-white' :
+                        idx === 1 ? 'bg-green-400 text-white' :
+                        idx === 2 ? 'bg-green-300 text-green-800' :
+                        'bg-gray-100 text-gray-600'}`}>
+                      {idx + 1}
+                    </div>
+                    <TeamLogo teamName={team.name} size={40} />
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900 text-sm">{team.name}</div>
+                      <div className="text-xs text-gray-500">{team.gf} GF in {team.gp} GP</div>
+                    </div>
+                    <div className="font-bold text-green-700 text-lg">{team.gpg.toFixed(2)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Best Defense */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+              <div className="bg-gradient-to-r from-red-500 to-rose-500 px-5 py-4">
+                <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                  <span className="text-2xl">🛡️</span> Best Defense (GA/GP)
+                </h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {bestDefense.map((team, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                      ${idx === 0 ? 'bg-red-500 text-white' :
+                        idx === 1 ? 'bg-red-400 text-white' :
+                        idx === 2 ? 'bg-red-300 text-red-800' :
+                        'bg-gray-100 text-gray-600'}`}>
+                      {idx + 1}
+                    </div>
+                    <TeamLogo teamName={team.name} size={40} />
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900 text-sm">{team.name}</div>
+                      <div className="text-xs text-gray-500">{team.ga} GA in {team.gp} GP</div>
+                    </div>
+                    <div className="font-bold text-red-700 text-lg">{team.gapg.toFixed(2)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Main Dashboard Component
+    const HockeyDashboard = () => {
+      const [view, setView] = useState('overview');
+      const [selectedDivision, setSelectedDivision] = useState(null);
+      const [selectedTeam, setSelectedTeam] = useState(null);
+
+      const handleDivisionClick = (divisionId) => {
+        setSelectedDivision(divisionId);
+        setView('division');
+      };
+
+      const handleTeamClick = (teamId) => {
+        setSelectedTeam(teamId);
+        setView('team');
+      };
+
+      const handleBack = () => {
+        if (view === 'team') {
+          setView(selectedDivision ? 'division' : 'overview');
+          setSelectedTeam(null);
+        } else if (view === 'division') {
+          setView('overview');
+          setSelectedDivision(null);
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-gray-100">
+          {/* Header */}
+          <header className="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 shadow-xl">
+            <div className="max-w-7xl mx-auto px-6 py-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-5 cursor-pointer" onClick={() => { setView('overview'); setSelectedDivision(null); setSelectedTeam(null); }}>
+                  <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                    <svg viewBox="0 0 24 24" className="w-10 h-10 text-blue-900" fill="currentColor">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                      <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                      <line x1="12" y1="2" x2="12" y2="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <line x1="12" y1="18" x2="12" y2="22" stroke="currentColor" strokeWidth="1.5"/>
+                      <line x1="2" y1="12" x2="6" y2="12" stroke="currentColor" strokeWidth="1.5"/>
+                      <line x1="18" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-white">{MOCK_DATA.season.title}</h1>
+                    <p className="text-blue-300 text-sm">{MOCK_DATA.season.association}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-6 text-white">
+                  <div className="text-center px-5 border-r border-blue-700/50">
+                    <div className="text-3xl font-bold">{MOCK_DATA.season.divisions_count}</div>
+                    <div className="text-xs text-blue-300 uppercase tracking-wider">Divisions</div>
+                  </div>
+                  <div className="text-center px-5 border-r border-blue-700/50">
+                    <div className="text-3xl font-bold">{MOCK_DATA.season.teams_count}</div>
+                    <div className="text-xs text-blue-300 uppercase tracking-wider">Teams</div>
+                  </div>
+                  <div className="text-center px-5">
+                    <div className="text-3xl font-bold">{MOCK_DATA.season.games_count}</div>
+                    <div className="text-xs text-blue-300 uppercase tracking-wider">Games</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* API Info Bar */}
+          <div className="bg-gray-800 py-2.5 px-6 border-b border-gray-700">
+            <div className="max-w-7xl mx-auto flex items-center gap-4 text-sm">
+              <span className="text-gray-400 font-medium">API Endpoints:</span>
+              <APIBadge endpoint="/api/v1/seasons/10776" />
+              <APIBadge endpoint="/api/v1/seasons/10776/divisions" />
+              <span className="text-gray-500 ml-auto font-mono text-xs">Base: http://localhost:8000</span>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <main className="max-w-7xl mx-auto px-6 py-8">
+            {view === 'overview' && (
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Divisions</h2>
+                  <APIBadge endpoint="/api/v1/seasons/10776/divisions" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {MOCK_DATA.divisions.map((division) => (
+                    <DivisionCard
+                      key={division.division_id}
+                      division={division}
+                      standings={MOCK_DATA.standings[division.division_id]}
+                      onDivisionClick={handleDivisionClick}
+                      onTeamClick={handleTeamClick}
+                    />
+                  ))}
+                </div>
+
+                <LeagueLeaders onTeamClick={handleTeamClick} />
+              </div>
+            )}
+
+            {view === 'division' && selectedDivision && (
+              <DivisionStandingsView
+                divisionId={selectedDivision}
+                onBack={handleBack}
+                onTeamClick={handleTeamClick}
+              />
+            )}
+
+            {view === 'team' && selectedTeam && (
+              <TeamDetailView
+                teamId={selectedTeam}
+                onBack={handleBack}
+              />
+            )}
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-gray-900 text-gray-400 py-8 mt-12">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="currentColor">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm">Youth Hockey Stats Dashboard • Powered by GameSheet API</span>
+                </div>
+                <div className="flex gap-6 text-sm">
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    Season: {MOCK_DATA.season.season_id}
+                  </span>
+                  <span>42 Team Logos</span>
+                  <span>FastAPI Backend</span>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    // Render
+    ReactDOM.render(<HockeyDashboard />, document.getElementById('root'));
+  </script>
+</body>
+</html>

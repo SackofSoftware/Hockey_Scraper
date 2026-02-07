@@ -1,0 +1,40 @@
+[project]
+name = "hockey-scraper"
+version = "0.2.0"
+description = "Hockey data scraper, stats pipeline, and logo API for Bay State Hockey League"
+requires-python = ">=3.11"
+readme = "README.md"
+
+dependencies = [
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+]
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.104",
+    "uvicorn[standard]>=0.24",
+    "pydantic>=2.5",
+    "python-multipart>=0.0.6",
+    "python-dotenv>=1.0",
+]
+scraping = [
+    "playwright>=1.40",
+    "lxml>=4.9",
+]
+db = [
+    "sqlalchemy>=2.0",
+]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.21",
+    "httpx>=0.25",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"

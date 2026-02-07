@@ -1,0 +1,29 @@
+{
+  "season_id": "10776",
+  "season_info": {
+    "season_id": "10776",
+    "title": "Bay State Hockey League - 2025-26"
+  },
+  "divisions": {
+    "U10B": "60038",
+    "HIGH SCHOOL  - JV": "60050",
+    "MIDDLE SCHOOL - SILVER UPPER": "60046",
+    "GU14": "60053",
+    "U12B": "60042",
+    "MIDDLE SCHOOL - GOLD": "60045",
+    "GU12": "60052",
+    "U12C": "60041",
+    "U10C": "60039",
+    "U8B - GOLD": "60033",
+    "U8A": "60032",
+    "MIDDLE SCHOOL - SILVER LOWER": "60047",
+    "U8B  - SILVER": "60034",
+    "GU10": "60051",
+    "HIGH SCHOOL  - VARSITY": "60049",
+    "U10A": "60037",
+    "HIGH SCHOOL -GIRLS": "60054",
+    "U14B": "60044",
+    "MIDDLE SCHOOL - BRONZE": "60048"
+  },
+  "division_count": 19
+}

@@ -1,0 +1,215 @@
+[
+  {
+    "game_id": "43817649",
+    "date": "10/20/2024",
+    "time": "3:00 PM EST",
+    "visitor_team": "8B2R - Tri-County Black",
+    "home_team": "8B2R - WHK",
+    "visitor_score": "2",
+    "home_score": "1",
+    "location": "Mark Bavis Arena - Rink 2, Rockland, MA",
+    "status": "Final",
+    "division": "8B2R",
+    "game_url": "https://www.ssc-hockey.org/game/show/43817649?subseason=931307",
+    "source_url": "https://www.ssc-hockey.org/schedule/day/league_instance/224428?date=2024-10-20&subseason=931307",
+    "period_scores": {
+      "1st": {
+        "visitor": 1,
+        "home": 0
+      },
+      "2nd": {
+        "visitor": 0,
+        "home": 1
+      },
+      "3rd": {
+        "visitor": 1,
+        "home": 0
+      }
+    },
+    "scoring_summary": [
+      {
+        "period": "1st",
+        "time": "5:23",
+        "player": "John Smith",
+        "assists": [
+          "Mike Jones",
+          "Tom Wilson"
+        ],
+        "team": null
+      },
+      {
+        "period": "2nd",
+        "time": "8:45",
+        "player": "Bob Johnson",
+        "assists": [],
+        "team": null
+      },
+      {
+        "period": "3rd",
+        "time": "12:10",
+        "player": "Jim Brown",
+        "assists": [
+          "John Smith"
+        ],
+        "team": null
+      }
+    ],
+    "penalties": [
+      {
+        "period": "1st",
+        "time": "8:15",
+        "player": "Tom Wilson",
+        "penalty": "Tripping",
+        "minutes": 2,
+        "team": null
+      },
+      {
+        "period": "2nd",
+        "time": "14:23",
+        "player": "Steve Davis",
+        "penalty": "Hooking",
+        "minutes": 2,
+        "team": null
+      }
+    ],
+    "shots_on_goal": {
+      "1st": 10,
+      "2nd": 8,
+      "3rd": 12,
+      "total": 30
+    }
+  },
+  {
+    "game_id": "43819451",
+    "date": "10/20/2024",
+    "time": "5:30 PM EST",
+    "visitor_team": "10B2M - Cape Cod Canal",
+    "home_team": "10B2M - KP Walpole",
+    "visitor_score": "4",
+    "home_score": "2",
+    "location": "Rodman Arena, Walpole, MA",
+    "status": "Final",
+    "division": "10B2M",
+    "game_url": "https://www.ssc-hockey.org/game/show/43819451?subseason=931307",
+    "source_url": "https://www.ssc-hockey.org/schedule/day/league_instance/224428?date=2024-10-20&subseason=931307",
+    "period_scores": {
+      "1st": {
+        "visitor": 1,
+        "home": 1
+      },
+      "2nd": {
+        "visitor": 2,
+        "home": 0
+      },
+      "3rd": {
+        "visitor": 1,
+        "home": 1
+      }
+    },
+    "scoring_summary": [
+      {
+        "period": "1st",
+        "time": "3:15",
+        "player": "Alex Thompson",
+        "assists": [
+          "Chris Lee"
+        ],
+        "team": null
+      },
+      {
+        "period": "1st",
+        "time": "9:42",
+        "player": "Ryan Murphy",
+        "assists": [],
+        "team": null
+      },
+      {
+        "period": "2nd",
+        "time": "4:20",
+        "player": "Alex Thompson",
+        "assists": [
+          "Chris Lee",
+          "Sam Rodriguez"
+        ],
+        "team": null
+      },
+      {
+        "period": "2nd",
+        "time": "11:05",
+        "player": "David Clark",
+        "assists": [
+          "Paul White"
+        ],
+        "team": null
+      },
+      {
+        "period": "3rd",
+        "time": "6:33",
+        "player": "Chris Lee",
+        "assists": [
+          "Alex Thompson"
+        ],
+        "team": null
+      },
+      {
+        "period": "3rd",
+        "time": "13:45",
+        "player": "Ryan Murphy",
+        "assists": [
+          "Jake Nelson"
+        ],
+        "team": null
+      }
+    ],
+    "penalties": [
+      {
+        "period": "1st",
+        "time": "7:30",
+        "player": "Sam Rodriguez",
+        "penalty": "Slashing",
+        "minutes": 2,
+        "team": null
+      },
+      {
+        "period": "2nd",
+        "time": "15:12",
+        "player": "Paul White",
+        "penalty": "Interference",
+        "minutes": 2,
+        "team": null
+      },
+      {
+        "period": "3rd",
+        "time": "10:08",
+        "player": "Jake Nelson",
+        "penalty": "Roughing",
+        "minutes": 2,
+        "team": null
+      }
+    ],
+    "shots_on_goal": {
+      "1st": 12,
+      "2nd": 15,
+      "3rd": 9,
+      "total": 36
+    }
+  },
+  {
+    "game_id": "44492111",
+    "date": "11/08/2025",
+    "time": "7:00 PM EST",
+    "visitor_team": "8BH - NRI Vikings White",
+    "home_team": "8BH - Franklin",
+    "visitor_score": null,
+    "home_score": null,
+    "location": "Pirelli Veterans Memorial Rink, Franklin, MA",
+    "status": "7:00 PM EST",
+    "division": "8BH",
+    "game_url": "https://www.ssc-hockey.org/game/show/44492111?subseason=948564&referrer=9115690",
+    "source_url": "https://www.ssc-hockey.org/schedule/day/league_instance/224428?subseason=948564",
+    "period_scores": null,
+    "scoring_summary": null,
+    "penalties": null,
+    "shots_on_goal": null
+  }
+]

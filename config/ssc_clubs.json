@@ -1,0 +1,225 @@
+{
+  "conference": "South Shore Conference",
+  "season": "2025-2026",
+  "source": "Discovered from SportsEngine network bar on ssc-hockey.org",
+  "last_updated": "2026-01-27",
+  "clubs": [
+    {
+      "name": "Barnstable Youth Hockey",
+      "url": "https://www.byha.net",
+      "abbreviation": "BAR",
+      "town": "Barnstable",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Braintree Youth Hockey",
+      "url": "https://www.braintreeyouthhockey.org",
+      "abbreviation": "BRA",
+      "town": "Braintree",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Canton Youth Hockey",
+      "url": "https://www.cantonyouthhockey.org",
+      "abbreviation": "CAN",
+      "town": "Canton",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Cape Cod Canal Youth Hockey",
+      "url": "https://capecodcanalyouthhockey.sportngin.com",
+      "abbreviation": "CCC",
+      "town": "Cape Cod Canal",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Falmouth Youth Hockey League",
+      "url": "https://www.falmouthyouthhockey.com",
+      "abbreviation": "FAL",
+      "town": "Falmouth",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Franklin Youth Hockey Association",
+      "url": "https://www.franklinflyers.org",
+      "abbreviation": "FRA",
+      "town": "Franklin",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Hingham Youth Hockey",
+      "url": "https://www.hyhockey.com",
+      "abbreviation": "HIN",
+      "town": "Hingham",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "King Philip Walpole Youth Hockey",
+      "url": "https://www.kpwhockey.org",
+      "abbreviation": "KPW",
+      "town": "King Philip/Walpole",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Lower Cape Codders Youth Hockey",
+      "url": "https://www.lccyh.com",
+      "abbreviation": "LCC",
+      "town": "Lower Cape",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Marshfield Youth Hockey",
+      "url": "https://www.marshfieldyouthhockey.com",
+      "abbreviation": "MAR",
+      "town": "Marshfield",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Northern Rhode Island Hockey",
+      "url": "https://www.nrivikings.com",
+      "abbreviation": "NRI",
+      "town": "Northern Rhode Island",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Norwood Nuggets Youth Hockey",
+      "url": "https://www.norwoodnuggets.org",
+      "abbreviation": "NOR",
+      "town": "Norwood",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Quincy Youth Hockey",
+      "url": "https://www.quincyyouthhockey.net",
+      "abbreviation": "QUI",
+      "town": "Quincy",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "South Shore Eagles Hockey League",
+      "url": "https://www.southshoreeagles.com",
+      "abbreviation": "SSE",
+      "town": "South Shore",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "South Shore Seahawks",
+      "url": "https://www.southshoreseahawks.org",
+      "abbreviation": "SSH",
+      "town": "South Shore",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Southcoast Panthers Youth Hockey Association",
+      "url": "https://www.southcoastpanthers.com",
+      "abbreviation": "SCP",
+      "town": "Southcoast",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Tri-County Saints Youth Hockey",
+      "url": "https://www.tricountysaints.com",
+      "abbreviation": "TCS",
+      "town": "Tri-County",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Weymouth Youth Hockey",
+      "url": "https://www.weymouthhockey.com",
+      "abbreviation": "WEY",
+      "town": "Weymouth",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "WHK Hawks",
+      "url": "https://www.whkhawks.org",
+      "abbreviation": "WHK",
+      "town": "Whitman-Hanson-Kingston",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Yarmouth-Dennis Youth Hockey",
+      "url": "https://www.ydyouthhockey.com",
+      "abbreviation": "YD",
+      "town": "Yarmouth-Dennis",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Milton Youth Hockey",
+      "url": "https://www.miltonyouthhockey.org",
+      "abbreviation": "MIL",
+      "town": "Milton",
+      "platform": "crossbar"
+    },
+    {
+      "name": "Seacoast Spartans",
+      "url": "https://www.seacoastspartans.com",
+      "abbreviation": "SCS",
+      "town": "Seacoast",
+      "platform": "leagueapps"
+    },
+    {
+      "name": "Bay State Breakers",
+      "url": "https://baystatebreakers.com",
+      "abbreviation": "BSB",
+      "town": "Bay State",
+      "platform": "angular"
+    },
+    {
+      "name": "Plymouth Youth Hockey",
+      "url": "https://www.plymouthyouthhockey.net",
+      "abbreviation": "PLY",
+      "town": "Plymouth",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Lynnfield Youth Hockey",
+      "url": "https://www.lynnfieldyouthhockey.com",
+      "abbreviation": "LYN",
+      "town": "Lynnfield",
+      "platform": "crossbar"
+    },
+    {
+      "name": "Manchester Inferno",
+      "url": "https://mryha.org",
+      "abbreviation": "INF",
+      "town": "Manchester, NH",
+      "platform": "mryha"
+    },
+    {
+      "name": "Providence Hockey Club",
+      "url": "https://providencehockeyclub.com",
+      "abbreviation": "PHC",
+      "town": "Providence",
+      "platform": "providence"
+    },
+    {
+      "name": "Hingham Youth Hockey",
+      "url": "https://www.hinghamyouthhockey.com",
+      "abbreviation": "HYH",
+      "town": "Hingham",
+      "platform": "crossbar"
+    },
+    {
+      "name": "Duxbury Youth Hockey",
+      "url": "https://www.duxburyyouthhockey.org",
+      "abbreviation": "DUX",
+      "town": "Duxbury",
+      "platform": "sportsengine"
+    },
+    {
+      "name": "Pembroke Youth Hockey",
+      "url": "https://www.pembrokeyouthhockey.com",
+      "abbreviation": "PEM",
+      "town": "Pembroke",
+      "platform": "crossbar"
+    },
+    {
+      "name": "Mass Admirals",
+      "url": "https://www.massadmirals.com",
+      "abbreviation": "ADM",
+      "town": "Massachusetts",
+      "platform": "crossbar"
+    }
+  ]
+}

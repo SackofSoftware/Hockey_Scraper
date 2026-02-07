@@ -1,0 +1,27 @@
+{
+  "analysis_timestamp": "2025-11-08T15:49:36.560852",
+  "database": "hockey_scraper_repo/output/complete_gamesheet_api_10776_20250915_181652.db",
+  "player_number_issues": [],
+  "game_quality_issues": [],
+  "player_confidence_scores": [],
+  "duplicate_players": [],
+  "missing_data_summary": {
+    "players": {
+      "total": 0,
+      "missing_names": 0,
+      "missing_names_pct": 0.0,
+      "missing_numbers": 0,
+      "missing_numbers_pct": 0.0
+    },
+    "games": {
+      "total": 0,
+      "missing_scores": 0,
+      "missing_scores_pct": 0.0,
+      "missing_dates": 0,
+      "missing_dates_pct": 0.0
+    },
+    "goals": {},
+    "penalties": {}
+  },
+  "overall_quality_score": 1.0
+}

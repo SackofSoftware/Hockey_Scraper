@@ -1,0 +1,252 @@
+{
+  "generated_at": "2025-11-08T15:52:19.260021",
+  "database": "test_hockey_data.db",
+  "player_scores": [
+    {
+      "entity_type": "player",
+      "entity_id": "p013",
+      "entity_name": "Super Scorer",
+      "quality_score": 0.8,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 1.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 0.2,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [
+        "Unrealistic PPG: 50.0"
+      ],
+      "recommendations": [
+        "Check for duplicate goal entries"
+      ]
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p001",
+      "entity_name": "John Smith",
+      "quality_score": 1.0,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 1.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p003",
+      "entity_name": "Tom Wilson",
+      "quality_score": 1.0,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 1.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p002",
+      "entity_name": "Mike Johnson",
+      "quality_score": 1.0,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 1.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p010",
+      "entity_name": "Dave Martin",
+      "quality_score": 1.0,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 1.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p004",
+      "entity_name": "Alex Brown",
+      "quality_score": 0.85,
+      "metrics": {
+        "number_consistency": 0.5,
+        "name_availability": 1.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [
+        "Wore 2 different numbers: 5,15"
+      ],
+      "recommendations": [
+        "Verify correct jersey number with team roster"
+      ]
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p011",
+      "entity_name": "Player #97",
+      "quality_score": 0.8,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 0.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [
+        "Player name not available"
+      ],
+      "recommendations": [
+        "Update player name from official roster"
+      ]
+    },
+    {
+      "entity_type": "player",
+      "entity_id": "p005",
+      "entity_name": "Player #87",
+      "quality_score": 0.8,
+      "metrics": {
+        "number_consistency": 1.0,
+        "name_availability": 0.0,
+        "data_completeness": 1.0,
+        "stats_reasonableness": 1.0,
+        "penalty_data_quality": 1.0
+      },
+      "issues": [
+        "Player name not available"
+      ],
+      "recommendations": [
+        "Update player name from official roster"
+      ]
+    }
+  ],
+  "game_scores": [
+    {
+      "entity_type": "game",
+      "entity_id": "game_2416969",
+      "entity_name": "Duxbury U12B vs WHK (2025-09-07)",
+      "quality_score": 1.0,
+      "metrics": {
+        "score_completeness": 1.0,
+        "box_score_quality": 1.0,
+        "data_consistency": 1.0,
+        "metadata_completeness": 1.0
+      },
+      "issues": [],
+      "recommendations": []
+    },
+    {
+      "entity_type": "game",
+      "entity_id": "game_2416970",
+      "entity_name": "Duxbury U12B vs Canton (2025-09-14)",
+      "quality_score": 0.65,
+      "metrics": {
+        "score_completeness": 0.0,
+        "box_score_quality": 1.0,
+        "data_consistency": 1.0,
+        "metadata_completeness": 1.0
+      },
+      "issues": [
+        "Missing final scores"
+      ],
+      "recommendations": [
+        "Update game with final scores"
+      ]
+    },
+    {
+      "entity_type": "game",
+      "entity_id": "game_2416971",
+      "entity_name": "WHK vs Plymouth (2025-09-21)",
+      "quality_score": 0.81,
+      "metrics": {
+        "score_completeness": 1.0,
+        "box_score_quality": 0.7,
+        "data_consistency": 0.5,
+        "metadata_completeness": 1.0
+      },
+      "issues": [
+        "Incomplete box score: 51/23 goals",
+        "Unusually high scoring game: 23 total goals"
+      ],
+      "recommendations": [
+        "Verify goal entries match final score",
+        "Verify final scores"
+      ]
+    },
+    {
+      "entity_type": "game",
+      "entity_id": "game_2416972",
+      "entity_name": "Duxbury U12B vs Canton (2025-09-28)",
+      "quality_score": 0.79,
+      "metrics": {
+        "score_completeness": 1.0,
+        "box_score_quality": 0.3,
+        "data_consistency": 1.0,
+        "metadata_completeness": 1.0
+      },
+      "issues": [
+        "No goal details despite final score"
+      ],
+      "recommendations": [
+        "Extract box score data"
+      ]
+    },
+    {
+      "entity_type": "game",
+      "entity_id": "game_2416973",
+      "entity_name": "Duxbury U12B vs Canton (2025-10-05)",
+      "quality_score": 0.79,
+      "metrics": {
+        "score_completeness": 1.0,
+        "box_score_quality": 0.3,
+        "data_consistency": 1.0,
+        "metadata_completeness": 1.0
+      },
+      "issues": [
+        "No goal details despite final score"
+      ],
+      "recommendations": [
+        "Extract box score data"
+      ]
+    }
+  ],
+  "team_scores": [],
+  "issue_summary": {
+    "total_unresolved": 5,
+    "critical": 0,
+    "warnings": 5,
+    "info": 0
+  },
+  "recommendations": [
+    {
+      "recommendation": "Update game with final scores",
+      "count": 1
+    }
+  ],
+  "trends": {},
+  "overall_statistics": {
+    "average_player_quality": 0.906,
+    "average_game_quality": 0.808,
+    "average_team_quality": 0,
+    "overall_quality": 0.571
+  }
+}

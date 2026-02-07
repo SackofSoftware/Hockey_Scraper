@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database files
+*.db
+*.db.backup
+*.sqlite
+*.sqlite3
+
+# Log files
+*.log
+
+# Editor temp files
+*.tmp.*
+
+# Data output (structure preserved via .gitkeep)
+data/raw/*
+!data/raw/.gitkeep
+data/ssc/*
+!data/ssc/.gitkeep
+data/gamesheet_output/
+data/ssc_output/
+data/*.json
+data/*.txt
+data/*.csv
+
+# Research/exploration scripts (not production)
+research/
+
+# Archive directory (too large for git)
+archive/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Claude Code local settings
+.claude/

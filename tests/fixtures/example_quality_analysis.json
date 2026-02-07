@@ -1,0 +1,202 @@
+{
+  "analysis_timestamp": "2025-11-08T15:52:00.418177",
+  "database": "test_hockey_data.db",
+  "player_number_issues": [
+    {
+      "player_id": "p004",
+      "player_name": "Alex Brown",
+      "team_id": 0,
+      "team_name": "WHK",
+      "numbers_used": [
+        "15(1g)",
+        "5(1g)"
+      ],
+      "games_count": 2,
+      "consistency_score": 0.5,
+      "issue_type": "number_inconsistency",
+      "details": "Player wore 2 different numbers across 2 games"
+    }
+  ],
+  "game_quality_issues": [
+    {
+      "game_id": "game_2416970",
+      "game_date": "2025-09-14",
+      "home_team": "Duxbury U12B",
+      "visitor_team": "Canton",
+      "issue_type": "incomplete_game_data",
+      "severity": "critical",
+      "description": "missing_scores",
+      "affected_entities": [
+        "missing_scores"
+      ]
+    },
+    {
+      "game_id": "game_2416971",
+      "game_date": "2025-09-21",
+      "home_team": "WHK",
+      "visitor_team": "Plymouth",
+      "issue_type": "incomplete_game_data",
+      "severity": "warning",
+      "description": "unusually_high_scoring (23 total goals)",
+      "affected_entities": [
+        "unusually_high_scoring (23 total goals)"
+      ]
+    },
+    {
+      "game_id": "game_2416972",
+      "game_date": "2025-09-28",
+      "home_team": "Duxbury U12B",
+      "visitor_team": "Canton",
+      "issue_type": "incomplete_game_data",
+      "severity": "warning",
+      "description": "box_score_missing",
+      "affected_entities": [
+        "box_score_missing"
+      ]
+    },
+    {
+      "game_id": "game_2416973",
+      "game_date": "2025-10-05",
+      "home_team": "Duxbury U12B",
+      "visitor_team": "Canton",
+      "issue_type": "incomplete_game_data",
+      "severity": "warning",
+      "description": "box_score_missing",
+      "affected_entities": [
+        "box_score_missing"
+      ]
+    }
+  ],
+  "player_confidence_scores": [
+    {
+      "player_id": "p013",
+      "player_name": "Super Scorer",
+      "team_name": "WHK",
+      "number_consistency": 1.0,
+      "name_available": true,
+      "games_played": 1,
+      "goals": 50,
+      "assists": 0,
+      "overall_confidence": 1.0,
+      "flags": []
+    },
+    {
+      "player_id": "p001",
+      "player_name": "John Smith",
+      "team_name": "Duxbury U12B",
+      "number_consistency": 1.0,
+      "name_available": true,
+      "games_played": 1,
+      "goals": 2,
+      "assists": 2,
+      "overall_confidence": 1.0,
+      "flags": []
+    },
+    {
+      "player_id": "p003",
+      "player_name": "Tom Wilson",
+      "team_name": "Duxbury U12B",
+      "number_consistency": 1.0,
+      "name_available": true,
+      "games_played": 1,
+      "goals": 2,
+      "assists": 2,
+      "overall_confidence": 1.0,
+      "flags": []
+    },
+    {
+      "player_id": "p002",
+      "player_name": "Mike Johnson",
+      "team_name": "Duxbury U12B",
+      "number_consistency": 1.0,
+      "name_available": true,
+      "games_played": 1,
+      "goals": 1,
+      "assists": 2,
+      "overall_confidence": 1.0,
+      "flags": []
+    },
+    {
+      "player_id": "p010",
+      "player_name": "Dave Martin",
+      "team_name": "WHK",
+      "number_consistency": 1.0,
+      "name_available": true,
+      "games_played": 1,
+      "goals": 3,
+      "assists": 0,
+      "overall_confidence": 1.0,
+      "flags": []
+    },
+    {
+      "player_id": "p011",
+      "player_name": "",
+      "team_name": "WHK",
+      "number_consistency": 1.0,
+      "name_available": false,
+      "games_played": 1,
+      "goals": 1,
+      "assists": 1,
+      "overall_confidence": 0.7,
+      "flags": [
+        "no_name"
+      ]
+    },
+    {
+      "player_id": "p004",
+      "player_name": "Alex Brown",
+      "team_name": "Duxbury U12B",
+      "number_consistency": 0.5,
+      "name_available": true,
+      "games_played": 2,
+      "goals": 1,
+      "assists": 0,
+      "overall_confidence": 0.75,
+      "flags": []
+    },
+    {
+      "player_id": "p004",
+      "player_name": "Alex Brown",
+      "team_name": "WHK",
+      "number_consistency": 0.5,
+      "name_available": true,
+      "games_played": 2,
+      "goals": 1,
+      "assists": 0,
+      "overall_confidence": 0.75,
+      "flags": []
+    },
+    {
+      "player_id": "p005",
+      "player_name": "",
+      "team_name": "Duxbury U12B",
+      "number_consistency": 1.0,
+      "name_available": false,
+      "games_played": 1,
+      "goals": 1,
+      "assists": 0,
+      "overall_confidence": 0.7,
+      "flags": [
+        "no_name"
+      ]
+    }
+  ],
+  "duplicate_players": [],
+  "missing_data_summary": {
+    "players": {},
+    "games": {
+      "total": 5,
+      "missing_scores": 1,
+      "missing_scores_pct": 20.0,
+      "missing_dates": 0,
+      "missing_dates_pct": 0.0
+    },
+    "goals": {
+      "total": 62,
+      "missing_scorer_names": 2,
+      "missing_scorer_names_pct": 3.2
+    },
+    "penalties": {}
+  },
+  "overall_quality_score": 0.97
+}

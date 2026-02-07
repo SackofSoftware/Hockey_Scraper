@@ -1,0 +1,629 @@
+[
+  {
+    "prompt": "show me all the WHK teams in a list",
+    "expected_behavior": "List all WHK teams with division tags",
+    "query": "\n                    SELECT DISTINCT\n                        t.team_name,\n                        d.division_name,\n                        t.club_name\n                    FROM teams t\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE t.club_name LIKE '%WHK%' OR t.team_name LIKE '%WHK%'\n                    ORDER BY d.division_name, t.team_name\n                ",
+    "test_type": "list_all_club_teams",
+    "actual_results": 9,
+    "sample_data": [
+      {
+        "team_name": "WHK",
+        "division_name": "HIGH SCHOOL  - JV",
+        "club_name": "WHK"
+      },
+      {
+        "team_name": "WHK",
+        "division_name": "U10B - SILVER",
+        "club_name": "WHK"
+      },
+      {
+        "team_name": "WHK",
+        "division_name": "U10C",
+        "club_name": "WHK"
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "whats the WHK u12 team PK %",
+    "expected_behavior": "Should ask which U12 team (might be multiple)",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.pk_percentage\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE (t.team_name LIKE '%WHK%' OR t.club_name LIKE '%WHK%')\n                      AND (d.division_name LIKE '%U12%' OR d.division_name LIKE '%12U%')\n                ",
+    "test_type": "ambiguous_age_group",
+    "status": "ERROR",
+    "error": "no such column: ts.pk_percentage"
+  },
+  {
+    "prompt": "who's the best player",
+    "expected_behavior": "Ask: best by what metric? (goals, assists, points, +/-)",
+    "query": "SELECT * FROM player_stats ORDER BY points DESC LIMIT 10",
+    "test_type": "undefined_superlative",
+    "actual_results": 10,
+    "sample_data": [
+      {
+        "player_id": "6050216",
+        "team_id": 386312,
+        "season_id": "10776",
+        "player_number": "4",
+        "player_name": " ",
+        "position": null,
+        "games_played": 8,
+        "games_started": 0,
+        "goals": 26,
+        "assists": 0,
+        "points": 26,
+        "points_per_game": 3.25,
+        "power_play_goals": 2,
+        "power_play_assists": 0,
+        "power_play_points": 0,
+        "short_handed_goals": 3,
+        "short_handed_assists": 0,
+        "short_handed_points": 0,
+        "game_winning_goals": 3,
+        "empty_net_goals": 0,
+        "penalties": 0,
+        "penalty_minutes": 0,
+        "pim_per_game": 0.0,
+        "major_penalties": 0,
+        "game_misconducts": 0,
+        "shots_on_goal": null,
+        "shooting_pct": null,
+        "plus_minus": null,
+        "games_started_goalie": 0,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "saves": 0,
+        "goals_against": 0,
+        "save_pct": null,
+        "goals_against_avg": null,
+        "shutouts": 0,
+        "number_consistency_score": 1.0,
+        "total_number_variations": 0,
+        "confidence_score": 1.0,
+        "club": "Pembroke B2"
+      },
+      {
+        "player_id": "5934733",
+        "team_id": 386289,
+        "season_id": "10776",
+        "player_number": "88",
+        "player_name": " ",
+        "position": null,
+        "games_played": 10,
+        "games_started": 0,
+        "goals": 24,
+        "assists": 0,
+        "points": 24,
+        "points_per_game": 2.4,
+        "power_play_goals": 1,
+        "power_play_assists": 0,
+        "power_play_points": 0,
+        "short_handed_goals": 0,
+        "short_handed_assists": 0,
+        "short_handed_points": 0,
+        "game_winning_goals": 3,
+        "empty_net_goals": 0,
+        "penalties": 1,
+        "penalty_minutes": 2,
+        "pim_per_game": 0.2,
+        "major_penalties": 0,
+        "game_misconducts": 0,
+        "shots_on_goal": null,
+        "shooting_pct": null,
+        "plus_minus": null,
+        "games_started_goalie": 0,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "saves": 0,
+        "goals_against": 0,
+        "save_pct": null,
+        "goals_against_avg": null,
+        "shutouts": 0,
+        "number_consistency_score": 1.0,
+        "total_number_variations": 0,
+        "confidence_score": 1.0,
+        "club": "South Shore Eagles"
+      },
+      {
+        "player_id": "5890344",
+        "team_id": 386419,
+        "season_id": "10776",
+        "player_number": "1",
+        "player_name": " ",
+        "position": null,
+        "games_played": 20,
+        "games_started": 0,
+        "goals": 23,
+        "assists": 0,
+        "points": 23,
+        "points_per_game": 1.15,
+        "power_play_goals": 1,
+        "power_play_assists": 0,
+        "power_play_points": 0,
+        "short_handed_goals": 0,
+        "short_handed_assists": 0,
+        "short_handed_points": 0,
+        "game_winning_goals": 5,
+        "empty_net_goals": 0,
+        "penalties": 1,
+        "penalty_minutes": 2,
+        "pim_per_game": 0.1,
+        "major_penalties": 0,
+        "game_misconducts": 0,
+        "shots_on_goal": null,
+        "shooting_pct": null,
+        "plus_minus": null,
+        "games_started_goalie": 0,
+        "wins": 0,
+        "losses": 0,
+        "ties": 0,
+        "saves": 0,
+        "goals_against": 0,
+        "save_pct": null,
+        "goals_against_avg": null,
+        "shutouts": 0,
+        "number_consistency_score": 1.0,
+        "total_number_variations": 0,
+        "confidence_score": 1.0,
+        "club": "Marshfield Gu12"
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "how did they do last game",
+    "expected_behavior": "Ask: which team?",
+    "query": null,
+    "test_type": "missing_context",
+    "status": "MANUAL_CHECK"
+  },
+  {
+    "prompt": "compare the two top teams",
+    "expected_behavior": "Ask: top by what? (points, wins, goal differential)",
+    "query": "SELECT * FROM team_stats ORDER BY points DESC LIMIT 2",
+    "test_type": "undefined_ranking",
+    "actual_results": 2,
+    "sample_data": [
+      {
+        "team_id": 386225,
+        "season_id": "10776",
+        "division_id": 60033,
+        "games_played": 9,
+        "wins": 9,
+        "losses": 0,
+        "ties": 0,
+        "otw": 0,
+        "otl": 0,
+        "sow": 0,
+        "sol": 0,
+        "points": 18,
+        "points_pct": 1.0,
+        "row": 9,
+        "division_rank": null,
+        "goals_for": 81,
+        "goals_against": 17,
+        "goal_differential": 64,
+        "goals_per_game": 9.0,
+        "goals_against_per_game": 1.8888888888888888,
+        "goals_period_1": 0,
+        "goals_period_2": 0,
+        "goals_period_3": 0,
+        "goals_overtime": 0,
+        "goals_allowed_period_1": 0,
+        "goals_allowed_period_2": 0,
+        "goals_allowed_period_3": 0,
+        "goals_allowed_overtime": 0,
+        "power_play_goals": 0,
+        "power_play_opportunities": 0,
+        "power_play_pct": 0.0,
+        "power_play_goals_against": 0,
+        "times_shorthanded": 0,
+        "penalty_kill_pct": 0.0,
+        "short_handed_goals": 0,
+        "short_handed_goals_against": 0,
+        "penalty_minutes": 0,
+        "pim_per_game": 0.0,
+        "penalties_taken": 0,
+        "major_penalties": 0,
+        "shots_for": null,
+        "shots_against": null,
+        "shooting_pct": null,
+        "save_pct": null,
+        "pdo": null,
+        "last_10_record": "10-0-0",
+        "current_streak": "W14",
+        "home_wins": 0,
+        "home_losses": 0,
+        "home_ties": 0,
+        "away_wins": 0,
+        "away_losses": 0,
+        "away_ties": 0,
+        "home_goals_for": 0,
+        "home_goals_against": 0,
+        "away_goals_for": 0,
+        "away_goals_against": 0,
+        "club": null,
+        "club_name": "WHK"
+      },
+      {
+        "team_id": 386217,
+        "season_id": "10776",
+        "division_id": 60033,
+        "games_played": 9,
+        "wins": 8,
+        "losses": 0,
+        "ties": 1,
+        "otw": 0,
+        "otl": 0,
+        "sow": 0,
+        "sol": 0,
+        "points": 17,
+        "points_pct": 0.9444444444444444,
+        "row": 8,
+        "division_rank": null,
+        "goals_for": 72,
+        "goals_against": 16,
+        "goal_differential": 56,
+        "goals_per_game": 8.0,
+        "goals_against_per_game": 1.7777777777777777,
+        "goals_period_1": 0,
+        "goals_period_2": 0,
+        "goals_period_3": 0,
+        "goals_overtime": 0,
+        "goals_allowed_period_1": 0,
+        "goals_allowed_period_2": 0,
+        "goals_allowed_period_3": 0,
+        "goals_allowed_overtime": 0,
+        "power_play_goals": 0,
+        "power_play_opportunities": 0,
+        "power_play_pct": 0.0,
+        "power_play_goals_against": 0,
+        "times_shorthanded": 0,
+        "penalty_kill_pct": 0.0,
+        "short_handed_goals": 0,
+        "short_handed_goals_against": 0,
+        "penalty_minutes": 0,
+        "pim_per_game": 0.0,
+        "penalties_taken": 0,
+        "major_penalties": 0,
+        "shots_for": null,
+        "shots_against": null,
+        "shooting_pct": null,
+        "save_pct": null,
+        "pdo": null,
+        "last_10_record": "8-0-1",
+        "current_streak": "W6",
+        "home_wins": 0,
+        "home_losses": 0,
+        "home_ties": 0,
+        "away_wins": 0,
+        "away_losses": 0,
+        "away_ties": 0,
+        "home_goals_for": 0,
+        "home_goals_against": 0,
+        "away_goals_for": 0,
+        "away_goals_against": 0,
+        "club": null,
+        "club_name": "Marshfield"
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "Bay State Breakers stats",
+    "expected_behavior": "Multiple teams named 'Bay State Breakers' in different divisions - list all, ask which one",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.wins,\n                        ts.losses,\n                        ts.points\n                    FROM teams t\n                    JOIN divisions d ON t.division_id = d.division_id\n                    LEFT JOIN team_stats ts ON t.team_id = ts.team_id\n                    WHERE t.team_name LIKE '%Bay State Breakers%'\n                ",
+    "test_type": "duplicate_team_names",
+    "actual_results": 0,
+    "sample_data": [],
+    "status": "NO_RESULTS"
+  },
+  {
+    "prompt": "show me the Silver Lake team",
+    "expected_behavior": "Multiple Silver Lake teams - list all divisions",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        t.club_name\n                    FROM teams t\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE t.team_name LIKE '%Silver Lake%'\n                ",
+    "test_type": "multiple_divisions",
+    "actual_results": 4,
+    "sample_data": [
+      {
+        "team_name": "Silver Lake",
+        "division_name": "MIDDLE SCHOOL - SILVER UPPER",
+        "club_name": "Silver Lake"
+      },
+      {
+        "team_name": "Silver Lake 7",
+        "division_name": "MIDDLE SCHOOL - SILVER LOWER",
+        "club_name": "Silver Lake"
+      },
+      {
+        "team_name": "Silver Lake Red",
+        "division_name": "MIDDLE SCHOOL - BRONZE",
+        "club_name": "Silver Lake"
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "which WHK team has the best offense and defense combined",
+    "expected_behavior": "Rank by (goals_for - goals_against) or goal_differential",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.goals_for,\n                        ts.goals_against,\n                        ts.goal_differential,\n                        ts.points\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE t.team_name LIKE '%WHK%' OR t.club_name LIKE '%WHK%'\n                    ORDER BY ts.goal_differential DESC\n                ",
+    "test_type": "composite_metric",
+    "actual_results": 9,
+    "sample_data": [
+      {
+        "team_name": "WHK Black",
+        "division_name": "U8B - GOLD",
+        "goals_for": 81,
+        "goals_against": 17,
+        "goal_differential": 64,
+        "points": 18
+      },
+      {
+        "team_name": "WHK Black",
+        "division_name": "U14B",
+        "goals_for": 42,
+        "goals_against": 2,
+        "goal_differential": 40,
+        "points": 10
+      },
+      {
+        "team_name": "WHK",
+        "division_name": "U10C",
+        "goals_for": 44,
+        "goals_against": 22,
+        "goal_differential": 22,
+        "points": 13
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "compare Bay State Breakers and Silver Lake head to head",
+    "expected_behavior": "Find H2H records, but there are multiple teams with these names - need clarification",
+    "query": "\n                    SELECT\n                        h2h.team_a_name,\n                        h2h.team_b_name,\n                        h2h.team_a_wins,\n                        h2h.team_b_wins,\n                        h2h.team_a_goals_for,\n                        h2h.team_b_goals_for\n                    FROM head_to_head h2h\n                    WHERE (h2h.team_a_name LIKE '%Bay State Breakers%' AND h2h.team_b_name LIKE '%Silver Lake%')\n                       OR (h2h.team_a_name LIKE '%Silver Lake%' AND h2h.team_b_name LIKE '%Bay State Breakers%')\n                ",
+    "test_type": "head_to_head_ambiguous",
+    "status": "ERROR",
+    "error": "no such column: h2h.team_a_name"
+  },
+  {
+    "prompt": "which teams have gotten better over time",
+    "expected_behavior": "Analyze recent form (last 5 games) vs overall record",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.wins,\n                        ts.losses,\n                        ts.last_5_record\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE ts.last_5_record IS NOT NULL\n                    ORDER BY t.team_name\n                ",
+    "test_type": "temporal_trend_analysis",
+    "status": "ERROR",
+    "error": "no such column: ts.last_5_record"
+  },
+  {
+    "prompt": "how have the Breakers been doing lately",
+    "expected_behavior": "Show last 5 games (recent form)",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.last_5_record,\n                        ts.current_streak\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE t.team_name LIKE '%Breakers%'\n                ",
+    "test_type": "recent_form",
+    "status": "ERROR",
+    "error": "no such column: ts.last_5_record"
+  },
+  {
+    "prompt": "show me teams on a winning streak",
+    "expected_behavior": "Filter by current_streak > 0",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.current_streak,\n                        ts.last_5_record\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE ts.current_streak > 0\n                    ORDER BY ts.current_streak DESC\n                ",
+    "test_type": "streak_filter",
+    "status": "ERROR",
+    "error": "no such column: ts.last_5_record"
+  },
+  {
+    "prompt": "show me teams that don't exist",
+    "expected_behavior": "Return no results, suggest similar teams",
+    "query": "SELECT * FROM teams WHERE team_name LIKE '%NONEXISTENT%'",
+    "test_type": "no_results",
+    "actual_results": 0,
+    "sample_data": [],
+    "status": "NO_RESULTS"
+  },
+  {
+    "prompt": "compare Bruins and Capitals",
+    "expected_behavior": "These are NHL teams, not in our database - politely explain we only have Bay State/EHF data",
+    "query": "SELECT * FROM teams WHERE team_name LIKE '%Bruins%' OR team_name LIKE '%Capitals%'",
+    "test_type": "wrong_league",
+    "actual_results": 0,
+    "sample_data": [],
+    "status": "NO_RESULTS"
+  },
+  {
+    "prompt": "who won the championship",
+    "expected_behavior": "Youth leagues don't have championships - explain structure, show top teams by division",
+    "query": null,
+    "test_type": "invalid_concept",
+    "status": "MANUAL_CHECK"
+  },
+  {
+    "prompt": "what's the playoff schedule",
+    "expected_behavior": "We only have regular season data, no playoff info",
+    "query": null,
+    "test_type": "missing_data_type",
+    "status": "MANUAL_CHECK"
+  },
+  {
+    "prompt": "which club has the most teams",
+    "expected_behavior": "COUNT teams grouped by club_name",
+    "query": "\n                    SELECT\n                        club_name,\n                        COUNT(*) as team_count\n                    FROM teams\n                    GROUP BY club_name\n                    ORDER BY team_count DESC\n                    LIMIT 10\n                ",
+    "test_type": "club_aggregation",
+    "actual_results": 10,
+    "sample_data": [
+      {
+        "club_name": "Duxbury",
+        "team_count": 13
+      },
+      {
+        "club_name": "Hanover",
+        "team_count": 11
+      },
+      {
+        "club_name": "Marshfield",
+        "team_count": 11
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "average goals per game in U12 divisions",
+    "expected_behavior": "Calculate avg(goals_for) for U12 divisions",
+    "query": "\n                    SELECT\n                        d.division_name,\n                        AVG(ts.goals_for) as avg_goals_for,\n                        AVG(ts.goals_against) as avg_goals_against,\n                        COUNT(ts.team_id) as team_count\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE d.division_name LIKE '%U12%' OR d.division_name LIKE '%12U%'\n                    GROUP BY d.division_name\n                ",
+    "test_type": "division_aggregation",
+    "actual_results": 5,
+    "sample_data": [
+      {
+        "division_name": "GU12 - GOLD",
+        "avg_goals_for": 40.5,
+        "avg_goals_against": 21.5,
+        "team_count": 4
+      },
+      {
+        "division_name": "GU12 - SILVER",
+        "avg_goals_for": 25.8,
+        "avg_goals_against": 41.0,
+        "team_count": 5
+      },
+      {
+        "division_name": "U12B",
+        "avg_goals_for": 33.5,
+        "avg_goals_against": 33.5,
+        "team_count": 8
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "total penalty minutes across all WHK teams",
+    "expected_behavior": "SUM penalty_minutes for all WHK teams",
+    "query": "\n                    SELECT\n                        SUM(ts.penalty_minutes) as total_pim,\n                        COUNT(DISTINCT t.team_id) as team_count\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    WHERE t.team_name LIKE '%WHK%' OR t.club_name LIKE '%WHK%'\n                ",
+    "test_type": "sum_aggregation",
+    "actual_results": 1,
+    "sample_data": [
+      {
+        "total_pim": 0,
+        "team_count": 9
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "top 10 goal scorers",
+    "expected_behavior": "ORDER BY goals DESC LIMIT 10",
+    "query": "\n                    SELECT\n                        ps.player_name,\n                        t.team_name,\n                        d.division_name,\n                        ps.goals,\n                        ps.assists,\n                        ps.points\n                    FROM player_stats ps\n                    JOIN teams t ON ps.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    ORDER BY ps.goals DESC\n                    LIMIT 10\n                ",
+    "test_type": "top_scorers",
+    "actual_results": 10,
+    "sample_data": [
+      {
+        "player_name": " ",
+        "team_name": "Pembroke B2",
+        "division_name": "U12C - GOLD",
+        "goals": 26,
+        "assists": 0,
+        "points": 26
+      },
+      {
+        "player_name": " ",
+        "team_name": "South Shore Eagles",
+        "division_name": "U10C",
+        "goals": 24,
+        "assists": 0,
+        "points": 24
+      },
+      {
+        "player_name": " ",
+        "team_name": "Marshfield GU12",
+        "division_name": "GU12 - GOLD",
+        "goals": 23,
+        "assists": 0,
+        "points": 23
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "find player named Smith",
+    "expected_behavior": "Likely multiple Smiths - show all, ask for clarification",
+    "query": "\n                    SELECT\n                        ps.player_name,\n                        t.team_name,\n                        d.division_name,\n                        ps.goals,\n                        ps.assists,\n                        ps.points\n                    FROM player_stats ps\n                    JOIN teams t ON ps.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE ps.player_name LIKE '%Smith%'\n                    ORDER BY ps.points DESC\n                ",
+    "test_type": "common_name_search",
+    "actual_results": 0,
+    "sample_data": [],
+    "status": "NO_RESULTS"
+  },
+  {
+    "prompt": "who has the most penalty minutes",
+    "expected_behavior": "ORDER BY penalty_minutes DESC",
+    "query": "\n                    SELECT\n                        ps.player_name,\n                        t.team_name,\n                        d.division_name,\n                        ps.penalty_minutes,\n                        ps.games_played\n                    FROM player_stats ps\n                    JOIN teams t ON ps.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    ORDER BY ps.penalty_minutes DESC\n                    LIMIT 10\n                ",
+    "test_type": "penalty_leaders",
+    "actual_results": 10,
+    "sample_data": [
+      {
+        "player_name": " ",
+        "team_name": "Plymouth 12U Goodwin",
+        "division_name": "U12C - GOLD",
+        "penalty_minutes": 38,
+        "games_played": 8
+      },
+      {
+        "player_name": " ",
+        "team_name": "South Shore Eagles",
+        "division_name": "U14B",
+        "penalty_minutes": 36,
+        "games_played": 6
+      },
+      {
+        "player_name": " ",
+        "team_name": "WHK",
+        "division_name": "HIGH SCHOOL  - JV",
+        "penalty_minutes": 34,
+        "games_played": 8
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "tell me about the best defensive team",
+    "expected_behavior": "Find team with best goals_against, provide narrative context",
+    "query": "\n                    SELECT\n                        t.team_name,\n                        d.division_name,\n                        ts.goals_against,\n                        ts.games_played,\n                        ROUND(CAST(ts.goals_against AS FLOAT) / ts.games_played, 2) as goals_against_per_game\n                    FROM team_stats ts\n                    JOIN teams t ON ts.team_id = t.team_id\n                    JOIN divisions d ON t.division_id = d.division_id\n                    WHERE ts.games_played > 0\n                    ORDER BY goals_against_per_game ASC\n                    LIMIT 5\n                ",
+    "test_type": "narrative_best",
+    "actual_results": 5,
+    "sample_data": [
+      {
+        "team_name": "Plymbroke A",
+        "division_name": "GU14",
+        "goals_against": 2,
+        "games_played": 7,
+        "goals_against_per_game": 0.29
+      },
+      {
+        "team_name": "WHK Black",
+        "division_name": "U14B",
+        "goals_against": 2,
+        "games_played": 5,
+        "goals_against_per_game": 0.4
+      },
+      {
+        "team_name": "Hingham Girls Red",
+        "division_name": "GU12 - GOLD",
+        "goals_against": 5,
+        "games_played": 9,
+        "goals_against_per_game": 0.56
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "prompt": "why is team X ranked higher than team Y",
+    "expected_behavior": "Compare points, wins, goal_differential, tiebreakers",
+    "query": null,
+    "test_type": "explanation_query",
+    "status": "MANUAL_CHECK"
+  },
+  {
+    "prompt": "should I be worried about our PK",
+    "expected_behavior": "Need team context - ask which team, then compare PK% to league average",
+    "query": "\n                    SELECT\n                        AVG(pk_percentage) as league_avg_pk\n                    FROM team_stats\n                    WHERE pk_percentage IS NOT NULL\n                ",
+    "test_type": "contextual_concern",
+    "status": "ERROR",
+    "error": "no such column: pk_percentage"
+  }
+]

@@ -1,0 +1,29 @@
+# FastAPI REST Server Requirements
+# Install with: pip3 install -r requirements.txt
+
+# Core API Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# Database
+sqlalchemy==2.0.23
+
+# CORS and middleware
+python-multipart==0.0.6
+
+# Utilities
+python-dotenv==1.0.0
+
+# Development/Testing (optional)
+httpx==0.25.1  # For testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# Existing scraper dependencies
+playwright==1.40.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Async HTTP for parallel API fetching
+aiohttp>=3.9.0

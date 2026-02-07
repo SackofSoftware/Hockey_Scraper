@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Youth Hockey Stats - Complete Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="standings_data.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    // ============================================================================
+    // COMPREHENSIVE LOGO MAPPING - 43 available logos + patterns
+    // ============================================================================
+    const LOGO_MAP = {
+      // Direct matches (filename -> variations)
+      'abington': 'Abington_youht_hockey.svg',
+      'barnstable': 'barnstable.svg',
+      'bay state breakers': 'bay_state_breakers.svg',
+      'bay state waves': 'bay_state_breakers.svg',
+      'beantown': 'beantown_bullies.svg',
+      'bourne': 'bourne.svg',
+      'braintree': 'braintree.svg',
+      'canton': 'canton.svg',
+      'cape cod gulls': 'cape_cod_gulls.svg',
+      'cape cod waves': 'capecodwaves.svg',
+      'cape cod whalers': 'capecodwaves.svg',
+      'cohasset': 'cohasset_hull.svg',
+      'cohassett': 'cohasset_hull.svg',
+      'duxbury': 'duxbury.svg',
+      'hanover': 'hanover.svg',
+      'hanover girls': 'hanover_girls.svg',
+      'hingham': 'hingham.svg',
+      'hingham girls': 'hingham_girls.svg',
+      'kp walpole': 'kp_walpole.svg',
+      'marshfield': 'marshfield.svg',
+      'admirals': 'mass_admirals.svg',
+      'mass admirals': 'mass_admirals.svg',
+      'milton': 'milton.svg',
+      'minuteman': 'Minuteman.svg',
+      'noreasters': 'noreasters.svg',
+      'north shore shamrocks': 'Northshoreshamrocks.svg',
+      'shamrocks': 'Northshoreshamrocks.svg',
+      'northstars': 'Northstars.svg',
+      'norwell': 'norwell.svg',
+      'pembroke': 'pembroke.svg',
+      'plymbroke': 'pembroke.svg',
+      'plymouth': 'plymouth.svg',
+      'rockland': 'rockland.svg',
+      'sandwich': 'sandwich.svg',
+      'sc panthers': 'sc_panthers.svg',
+      'scituate': 'scituate.svg',
+      'silver lake': 'silverlake.svg',
+      'silverlake': 'silverlake.svg',
+      'south shore eagles': 'south_shore_eagles.svg',
+      'south shore seahawks': 'south_shore_seahawks.svg',
+      'seahawks': 'south_shore_seahawks.svg',
+      'spartans': 'Spartans.svg',
+      'seacoast spartans': 'Spartans.svg',
+      'tri county': 'tricounty.svg',
+      'tricounty': 'tricounty.svg',
+      'vikings': 'vikings.svg',
+      'walpole': 'walpole.svg',
+      'weymouth': 'weymouth.svg',
+      'whk': 'WHK.svg',
+      'whitman': 'WHK.svg',
+      'whitmanhanson': 'whitmanhanson.svg',
+      'terriers': 'bu_terrier.svg',
+      'ihs': 'ihs_hockey.svg',
+    };
+
+    // Pattern-based matching for common team name patterns
+    const LOGO_PATTERNS = [
+      { pattern: /bay\s*state\s*(breakers|waves)/i, logo: 'bay_state_breakers.svg' },
+      { pattern: /south\s*shore\s*eagles/i, logo: 'south_shore_eagles.svg' },
+      { pattern: /south\s*shore\s*seahawks/i, logo: 'south_shore_seahawks.svg' },
+      { pattern: /south\s*shore\s*kings/i, logo: 'south_shore_seahawks.svg' },
+      { pattern: /seahawks/i, logo: 'south_shore_seahawks.svg' },
+      { pattern: /north\s*shore\s*shamrocks/i, logo: 'Northshoreshamrocks.svg' },
+      { pattern: /shamrocks/i, logo: 'Northshoreshamrocks.svg' },
+      { pattern: /northstars/i, logo: 'Northstars.svg' },
+      { pattern: /spartans/i, logo: 'Spartans.svg' },
+      { pattern: /minuteman/i, logo: 'Minuteman.svg' },
+      { pattern: /cape\s*cod/i, logo: 'capecodwaves.svg' },
+      { pattern: /cohasset|cohassett/i, logo: 'cohasset_hull.svg' },
+      { pattern: /plymbroke/i, logo: 'pembroke.svg' },
+      { pattern: /tri\s*county/i, logo: 'tricounty.svg' },
+      { pattern: /silver\s*lake/i, logo: 'silverlake.svg' },
+      { pattern: /kp\s*walpole/i, logo: 'kp_walpole.svg' },
+      { pattern: /hanover\s*girls/i, logo: 'hanover_girls.svg' },
+      { pattern: /hingham\s*girls/i, logo: 'hingham_girls.svg' },
+      { pattern: /abington/i, logo: 'Abington_youht_hockey.svg' },
+      { pattern: /braintree/i, logo: 'braintree.svg' },
+      { pattern: /canton/i, logo: 'canton.svg' },
+      { pattern: /duxbury/i, logo: 'duxbury.svg' },
+      { pattern: /hanover/i, logo: 'hanover.svg' },
+      { pattern: /hingham/i, logo: 'hingham.svg' },
+      { pattern: /marshfield/i, logo: 'marshfield.svg' },
+      { pattern: /milton/i, logo: 'milton.svg' },
+      { pattern: /norwell/i, logo: 'norwell.svg' },
+      { pattern: /pembroke/i, logo: 'pembroke.svg' },
+      { pattern: /plymouth/i, logo: 'plymouth.svg' },
+      { pattern: /rockland/i, logo: 'rockland.svg' },
+      { pattern: /scituate/i, logo: 'scituate.svg' },
+      { pattern: /walpole/i, logo: 'walpole.svg' },
+      { pattern: /weymouth/i, logo: 'weymouth.svg' },
+      { pattern: /whk|whitman/i, logo: 'WHK.svg' },
+      { pattern: /barnstable/i, logo: 'barnstable.svg' },
+      { pattern: /bourne/i, logo: 'bourne.svg' },
+      { pattern: /sandwich/i, logo: 'sandwich.svg' },
+      { pattern: /admirals/i, logo: 'mass_admirals.svg' },
+      { pattern: /noreasters/i, logo: 'noreasters.svg' },
+      { pattern: /vikings/i, logo: 'vikings.svg' },
+      { pattern: /panthers/i, logo: 'sc_panthers.svg' },
+      { pattern: /beantown/i, logo: 'beantown_bullies.svg' },
+    ];
+
+    function findLogo(teamName) {
+      if (!teamName) return null;
+      const lower = teamName.toLowerCase();
+
+      // Direct match
+      for (const [key, logo] of Object.entries(LOGO_MAP)) {
+        if (lower.includes(key)) return logo;
+      }
+
+      // Pattern match
+      for (const { pattern, logo } of LOGO_PATTERNS) {
+        if (pattern.test(teamName)) return logo;
+      }
+
+      return null;
+    }
+
+    // League configurations
+    const LEAGUES = {
+      '10477': {
+        id: '10477',
+        name: 'Eastern Hockey Federation',
+        short: 'EHF',
+        logo: 'EHF_League_logo.svg',
+        color: 'from-purple-900 to-indigo-700',
+        accent: 'purple',
+      },
+      '10776': {
+        id: '10776',
+        name: 'Bay State Hockey League',
+        short: 'BSHL',
+        logo: 'Baystate_League_logo.svg',
+        color: 'from-blue-900 to-blue-700',
+        accent: 'blue',
+      }
+    };
+
+    // Organize divisions by category
+    function categorizeDivisions(standings, leagueId) {
+      const divisions = Object.entries(standings)
+        .filter(([key, data]) => data.league_id === leagueId)
+        .map(([key, data]) => ({ key, ...data }));
+
+      if (leagueId === '10477') {
+        // EHF: Birth year + Age-based
+        const birthYear = divisions.filter(d => /^20\d{2}/.test(d.division_name)).sort((a,b) => a.division_name.localeCompare(b.division_name));
+        const ageBased = divisions.filter(d => /^U\d{2}/.test(d.division_name)).sort((a,b) => a.division_name.localeCompare(b.division_name));
+        const futures = divisions.filter(d => /Fed Futures/.test(d.division_name));
+        const other = divisions.filter(d => !birthYear.includes(d) && !ageBased.includes(d) && !futures.includes(d));
+        return [
+          { name: 'Birth Year Divisions', divisions: birthYear },
+          { name: 'Age-Based (U14-U18)', divisions: ageBased },
+          { name: 'Fed Futures', divisions: futures },
+          { name: 'Other', divisions: other },
+        ].filter(g => g.divisions.length > 0);
+      } else {
+        // Bay State: Youth, School, Girls
+        const youth = divisions.filter(d => /^U\d/.test(d.division_name)).sort((a,b) => a.division_name.localeCompare(b.division_name));
+        const school = divisions.filter(d => /SCHOOL|BOG/.test(d.division_name)).sort((a,b) => a.division_name.localeCompare(b.division_name));
+        const girls = divisions.filter(d => /^G|GIRLS/.test(d.division_name)).sort((a,b) => a.division_name.localeCompare(b.division_name));
+        const other = divisions.filter(d => !youth.includes(d) && !school.includes(d) && !girls.includes(d));
+        return [
+          { name: 'Youth Divisions (U8-U14)', divisions: youth },
+          { name: 'School Divisions', divisions: school },
+          { name: 'Girls Divisions', divisions: girls },
+          { name: 'Other', divisions: other },
+        ].filter(g => g.divisions.length > 0);
+      }
+    }
+
+    // ============================================================================
+    // COMPONENTS
+    // ============================================================================
+
+    const TeamLogo = ({ teamName, size = 40, className = "" }) => {
+      const [hasError, setHasError] = useState(false);
+      const logo = findLogo(teamName);
+      const initials = teamName?.split(' ').filter(w => w.length > 0).map(w => w[0]).join('').slice(0, 3).toUpperCase() || '?';
+
+      const colors = ['from-blue-600 to-blue-800', 'from-red-600 to-red-800', 'from-green-600 to-green-800',
+                      'from-purple-600 to-purple-800', 'from-orange-500 to-red-600', 'from-teal-500 to-cyan-600'];
+      const colorIdx = (teamName?.charCodeAt(0) || 0) % colors.length;
+
+      if (!logo || hasError) {
+        return (
+          <div className={`rounded-full flex items-center justify-center text-white font-bold shadow bg-gradient-to-br ${colors[colorIdx]} ${className}`}
+               style={{ width: size, height: size, fontSize: Math.max(10, size * 0.28) }}>
+            {initials}
+          </div>
+        );
+      }
+      return (
+        <div className={`rounded-full bg-white flex items-center justify-center overflow-hidden shadow border border-gray-200 ${className}`}
+             style={{ width: size, height: size }}>
+          <img src={`logos/${logo}`} alt={teamName} className="w-full h-full object-contain p-0.5" onError={() => setHasError(true)} />
+        </div>
+      );
+    };
+
+    const LeagueLogo = ({ leagueId, size = 60 }) => {
+      const [hasError, setHasError] = useState(false);
+      const league = LEAGUES[leagueId];
+
+      if (hasError) {
+        return (
+          <div className={`rounded-lg bg-gradient-to-br ${league.color} flex items-center justify-center text-white font-bold`}
+               style={{ width: size, height: size }}>
+            {league.short}
+          </div>
+        );
+      }
+      return (
+        <div className="rounded-lg bg-white p-1 shadow" style={{ width: size, height: size }}>
+          <img src={`logos/${league.logo}`} alt={league.name} className="w-full h-full object-contain" onError={() => setHasError(true)} />
+        </div>
+      );
+    };
+
+    const APIBadge = ({ endpoint }) => (
+      <span className="inline-flex items-center gap-1 bg-gray-800 text-gray-300 px-2 py-0.5 rounded text-xs font-mono">
+        <span className="text-green-400">GET</span> {endpoint}
+      </span>
+    );
+
+    const StandingsTable = ({ data, onTeamClick }) => {
+      if (!data || !data.teams || data.teams.length === 0) {
+        return <div className="p-8 text-center text-gray-500">No standings data available</div>;
+      }
+
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b sticky top-0">
+              <tr>
+                <th className="py-2 px-2 text-center w-10">#</th>
+                <th className="py-2 px-2 text-left">Team</th>
+                <th className="py-2 px-2 text-center">GP</th>
+                <th className="py-2 px-2 text-center">W</th>
+                <th className="py-2 px-2 text-center">L</th>
+                <th className="py-2 px-2 text-center">T</th>
+                <th className="py-2 px-2 text-center">GF</th>
+                <th className="py-2 px-2 text-center">GA</th>
+                <th className="py-2 px-2 text-center">+/-</th>
+                <th className="py-2 px-2 text-center">PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.teams.map((team, idx) => {
+                const diff = team.gf - team.ga;
+                return (
+                  <tr key={team.team_id} className="border-b hover:bg-blue-50 cursor-pointer" onClick={() => onTeamClick && onTeamClick(team)}>
+                    <td className="py-2 px-2 text-center">
+                      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold
+                        ${team.rank === 1 ? 'bg-yellow-400 text-yellow-900' : team.rank === 2 ? 'bg-gray-300 text-gray-700' :
+                          team.rank === 3 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'}`}>
+                        {team.rank}
+                      </span>
+                    </td>
+                    <td className="py-2 px-2">
+                      <div className="flex items-center gap-2">
+                        <TeamLogo teamName={team.name} size={28} />
+                        <span className="font-medium text-gray-800 truncate max-w-[200px]" title={team.name}>{team.name}</span>
+                      </div>
+                    </td>
+                    <td className="py-2 px-2 text-center text-gray-600">{team.gp}</td>
+                    <td className="py-2 px-2 text-center text-green-700 font-semibold">{team.w}</td>
+                    <td className="py-2 px-2 text-center text-red-700 font-semibold">{team.l}</td>
+                    <td className="py-2 px-2 text-center text-gray-500">{team.t}</td>
+                    <td className="py-2 px-2 text-center">{team.gf}</td>
+                    <td className="py-2 px-2 text-center">{team.ga}</td>
+                    <td className="py-2 px-2 text-center font-medium" style={{ color: diff > 0 ? '#059669' : diff < 0 ? '#dc2626' : '#6b7280' }}>
+                      {diff > 0 ? '+' : ''}{diff}
+                    </td>
+                    <td className="py-2 px-2 text-center">
+                      <span className="inline-flex items-center justify-center bg-blue-100 text-blue-800 font-bold rounded-full w-8 h-8 text-sm">
+                        {team.pts}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+    };
+
+    const DivisionCard = ({ division, isSelected, onClick }) => {
+      const teamCount = division.teams?.length || 0;
+      const topTeam = division.teams?.[0];
+
+      return (
+        <div
+          className={`p-3 rounded-lg border cursor-pointer transition-all ${
+            isSelected ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow'
+          }`}
+          onClick={onClick}
+        >
+          <div className="font-semibold text-gray-800 text-sm truncate" title={division.division_name}>
+            {division.division_name}
+          </div>
+          <div className="text-xs text-gray-500 mt-1">{teamCount} teams</div>
+          {topTeam && (
+            <div className="flex items-center gap-1.5 mt-2 text-xs">
+              <span className="text-yellow-600">🏆</span>
+              <TeamLogo teamName={topTeam.name} size={18} />
+              <span className="text-gray-600 truncate">{topTeam.name.split(' - ')[0]}</span>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const TeamDetailModal = ({ team, division, onClose }) => {
+      if (!team) return null;
+
+      const diff = team.gf - team.ga;
+      const pctPts = team.gp > 0 ? ((team.pts / (team.gp * 2)) * 100).toFixed(1) : 0;
+      const gpg = team.gp > 0 ? (team.gf / team.gp).toFixed(2) : 0;
+      const gapg = team.gp > 0 ? (team.ga / team.gp).toFixed(2) : 0;
+
+      return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-auto" onClick={e => e.stopPropagation()}>
+            <div className={`bg-gradient-to-r ${LEAGUES[division.league_id].color} p-6 rounded-t-xl`}>
+              <button onClick={onClose} className="float-right text-white/70 hover:text-white text-2xl">&times;</button>
+              <div className="flex items-center gap-4">
+                <TeamLogo teamName={team.name} size={80} className="border-4 border-white" />
+                <div>
+                  <h2 className="text-2xl font-bold text-white">{team.name}</h2>
+                  <p className="text-white/70">{division.division_name}</p>
+                  <div className="flex gap-2 mt-2">
+                    <span className="bg-white/20 px-3 py-1 rounded text-white text-sm">
+                      Record: <strong>{team.w}-{team.l}-{team.t}</strong>
+                    </span>
+                    <span className="bg-white/20 px-3 py-1 rounded text-white text-sm">
+                      Rank: <strong>#{team.rank}</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4">
+                <APIBadge endpoint={`/api/v1/teams/${team.team_id}/stats`} />
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-bold text-gray-800">{team.pts}</div>
+                  <div className="text-xs text-gray-500">Points</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{team.gf}</div>
+                  <div className="text-xs text-gray-500">Goals For ({gpg}/G)</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-bold text-red-600">{team.ga}</div>
+                  <div className="text-xs text-gray-500">Goals Against ({gapg}/G)</div>
+                </div>
+                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                  <div className={`text-2xl font-bold ${diff > 0 ? 'text-green-600' : diff < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+                    {diff > 0 ? '+' : ''}{diff}
+                  </div>
+                  <div className="text-xs text-gray-500">Goal Diff</div>
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <h3 className="font-semibold text-gray-800 mb-2">API Endpoints</h3>
+                <div className="flex flex-wrap gap-2">
+                  <APIBadge endpoint={`/api/v1/teams/${team.team_id}`} />
+                  <APIBadge endpoint={`/api/v1/teams/${team.team_id}/roster`} />
+                  <APIBadge endpoint={`/api/v1/teams/${team.team_id}/schedule`} />
+                  <APIBadge endpoint={`/api/v1/teams/${team.team_id}/leaders`} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Main Dashboard
+    const HockeyDashboard = () => {
+      const [selectedLeague, setSelectedLeague] = useState('10776');
+      const [selectedDivision, setSelectedDivision] = useState(null);
+      const [selectedTeam, setSelectedTeam] = useState(null);
+      const [searchTerm, setSearchTerm] = useState('');
+
+      const standings = typeof ALL_STANDINGS !== 'undefined' ? ALL_STANDINGS : {};
+
+      const divisionGroups = useMemo(() => {
+        return categorizeDivisions(standings, selectedLeague);
+      }, [standings, selectedLeague]);
+
+      // Auto-select first division
+      useMemo(() => {
+        if (!selectedDivision && divisionGroups.length > 0 && divisionGroups[0].divisions.length > 0) {
+          setSelectedDivision(divisionGroups[0].divisions[0].key);
+        }
+      }, [divisionGroups, selectedDivision]);
+
+      const currentDivision = selectedDivision ? standings[selectedDivision] : null;
+
+      // Filter teams by search
+      const filteredDivision = useMemo(() => {
+        if (!currentDivision || !searchTerm) return currentDivision;
+        return {
+          ...currentDivision,
+          teams: currentDivision.teams.filter(t =>
+            t.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        };
+      }, [currentDivision, searchTerm]);
+
+      const league = LEAGUES[selectedLeague];
+
+      // Stats summary
+      const leagueStats = useMemo(() => {
+        const divs = Object.values(standings).filter(d => d.league_id === selectedLeague);
+        const teams = divs.reduce((acc, d) => acc + (d.teams?.length || 0), 0);
+        const games = divs.reduce((acc, d) => acc + d.teams?.reduce((a, t) => a + (t.gp || 0), 0) / 2, 0);
+        return { divisions: divs.length, teams, games: Math.round(games) };
+      }, [standings, selectedLeague]);
+
+      return (
+        <div className="min-h-screen bg-gray-100">
+          {/* Header */}
+          <header className={`bg-gradient-to-r ${league.color} shadow-xl`}>
+            <div className="max-w-7xl mx-auto px-4 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <LeagueLogo leagueId={selectedLeague} size={56} />
+                  <div>
+                    <h1 className="text-xl font-bold text-white">{league.name}</h1>
+                    <p className="text-white/70 text-sm">2024-25 Season</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 text-white text-sm">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">{leagueStats.divisions}</div>
+                    <div className="text-xs text-white/70">Divisions</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">{leagueStats.teams}</div>
+                    <div className="text-xs text-white/70">Teams</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">{leagueStats.games}</div>
+                    <div className="text-xs text-white/70">Games</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* League Switcher */}
+          <div className="bg-gray-800 py-2">
+            <div className="max-w-7xl mx-auto px-4 flex items-center gap-4">
+              <span className="text-gray-400 text-sm">League:</span>
+              {Object.values(LEAGUES).map(l => (
+                <button
+                  key={l.id}
+                  onClick={() => { setSelectedLeague(l.id); setSelectedDivision(null); }}
+                  className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                    selectedLeague === l.id ? 'bg-white text-gray-900' : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  {l.short}
+                </button>
+              ))}
+              <div className="ml-auto flex gap-2">
+                <APIBadge endpoint={`/api/v1/seasons/${selectedLeague}`} />
+                <APIBadge endpoint={`/api/v1/seasons/${selectedLeague}/divisions`} />
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <main className="max-w-7xl mx-auto px-4 py-6">
+            <div className="flex gap-6">
+              {/* Sidebar - Division List */}
+              <div className="w-72 flex-shrink-0">
+                <div className="bg-white rounded-xl border shadow-sm overflow-hidden sticky top-4">
+                  <div className="p-3 border-b bg-gray-50">
+                    <input
+                      type="text"
+                      placeholder="Search teams..."
+                      className="w-full px-3 py-2 border rounded-lg text-sm"
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div className="max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-hide">
+                    {divisionGroups.map(group => (
+                      <div key={group.name} className="border-b last:border-b-0">
+                        <div className="px-3 py-2 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider sticky top-0">
+                          {group.name}
+                        </div>
+                        <div className="p-2 grid gap-2">
+                          {group.divisions.map(div => (
+                            <DivisionCard
+                              key={div.key}
+                              division={div}
+                              isSelected={selectedDivision === div.key}
+                              onClick={() => setSelectedDivision(div.key)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Content - Standings */}
+              <div className="flex-1">
+                {filteredDivision && (
+                  <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+                    <div className={`bg-gradient-to-r ${league.color} px-4 py-3 flex items-center justify-between`}>
+                      <div>
+                        <h2 className="text-lg font-bold text-white">{filteredDivision.division_name}</h2>
+                        <p className="text-white/70 text-sm">{filteredDivision.teams?.length || 0} teams</p>
+                      </div>
+                      <APIBadge endpoint={`/api/v1/divisions/${filteredDivision.division_id}/standings`} />
+                    </div>
+                    <StandingsTable
+                      data={filteredDivision}
+                      onTeamClick={(team) => setSelectedTeam(team)}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          {/* Team Detail Modal */}
+          {selectedTeam && currentDivision && (
+            <TeamDetailModal
+              team={selectedTeam}
+              division={currentDivision}
+              onClose={() => setSelectedTeam(null)}
+            />
+          )}
+
+          {/* Footer */}
+          <footer className="bg-gray-900 text-gray-400 py-4 mt-8">
+            <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-sm">
+              <div>Youth Hockey Stats • {Object.keys(standings).length} divisions loaded</div>
+              <div className="flex gap-4">
+                <span>EHF: 10477</span>
+                <span>BSHL: 10776</span>
+                <span>API: localhost:8000</span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<HockeyDashboard />, document.getElementById('root'));
+  </script>
+</body>
+</html>
